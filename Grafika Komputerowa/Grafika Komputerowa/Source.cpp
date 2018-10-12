@@ -2,7 +2,7 @@
 
 // Najprostszy program wykorzystuj¹cy funkcje biblioteki OpenGL
 
-/*************************************************************************************/ 
+/*************************************************************************************/
 
 #include <windows.h>
 #include <gl/gl.h>
@@ -15,10 +15,10 @@ float x = -50.0;
 float y = 50.0;
 //wspolrzedne wierzcholka startowego
 
-int maxLevel = 5;
+int maxLevel = 3;
 //maksymalny poziom dywanu
 
-float distortion = 10.0;
+float starterDistortion = 70.0;
 //startowe znieksztalcenie
 
 float starterSideLength = 100.0;
@@ -30,20 +30,30 @@ float starterSideLength = 100.0;
 // (zawsze wywo³ywana, gdy trzeba przerysowaæ scenê)
 
 
-void Drawing(float x, float y, float sideLength, int level)
+void Drawing(float x, float y, float sideLength, int level, float distortion)
 {
-	if(level > maxLevel)
+	if (level > maxLevel)
 	{
-		distortion = distortion / pow(2.0,level);
-		//ustawienie odpowiedniego znieksztalcenia w zaleznosci od poziomu
-	
-		x += distortion;
+		int draw1 = rand() % 50;
+		float draw2 = (rand() % 50) + 1;
 
-		y += distortion;
+		distortion = draw2 * distortion;
+
+		if (draw1 % 2)
+			x += distortion;
+		else
+			x -= distortion;
+
+		draw1 = rand() % 50;
+
+		if (draw1 % 2)
+			y += distortion;
+		else
+			y -= distortion;
 
 		glBegin(GL_POLYGON);
 		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);
-		glVertex2f(x,y);
+		glVertex2f(x, y);
 		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);
 		glVertex2f(x, y - sideLength);
 		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);
@@ -56,28 +66,31 @@ void Drawing(float x, float y, float sideLength, int level)
 	{
 		sideLength = sideLength / 3.0;
 		//ustawienie odpowiedniej dlugosci boku
-		Drawing(x, y, sideLength, level + 1);
+
+		distortion = distortion / 9.0;
+
+		Drawing(x, y, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w lewym gornym rogu
 
-		Drawing(x + sideLength, y, sideLength, level + 1);
+		Drawing(x + sideLength, y, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie u gory
 
-		Drawing(x + 2*sideLength, y, sideLength, level + 1);
+		Drawing(x + 2 * sideLength, y, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w prawym gornym rogu
 
-		Drawing(x, y - sideLength, sideLength, level + 1);
+		Drawing(x, y - sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie z lewej
 
-		Drawing(x + 2*sideLength, y - sideLength, sideLength, level + 1);
+		Drawing(x + 2 * sideLength, y - sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie z prawej
 
-		Drawing(x, y - 2*sideLength, sideLength, level + 1);
+		Drawing(x, y - 2 * sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w lewym dolnym rogu
 
-		Drawing(x + sideLength, y - 2*sideLength, sideLength, level + 1);
+		Drawing(x + sideLength, y - 2 * sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie na dole
 
-		Drawing(x + 2*sideLength, y - 2*sideLength, sideLength, level + 1);
+		Drawing(x + 2 * sideLength, y - 2 * sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w prawym dolnym rogu
 	}
 }
@@ -87,14 +100,14 @@ void RenderScene(void)
 
 {
 
-    glClear(GL_COLOR_BUFFER_BIT); 
-   // Czyszczenie okna aktualnym kolorem czyszcz¹cym
+	glClear(GL_COLOR_BUFFER_BIT);
+	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
 
-	Drawing(x, y, starterSideLength, 0);
+	Drawing(x, y, starterSideLength, 0, starterDistortion);
 	//Funkcja rysuj¹ca kwadrat
 
-    glFlush();
-   // Przekazanie poleceñ rysuj¹cych do wykonania
+	glFlush();
+	// Przekazanie poleceñ rysuj¹cych do wykonania
 
 }
 

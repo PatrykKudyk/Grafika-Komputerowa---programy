@@ -10,13 +10,18 @@
 #include <cmath>
 #include <ctime>
 
-typedef float point[2];
-
 const float x = -50.0;
 const float y = 50.0;
 //wspolrzedne wierzcholka startowego
 
-const point p = {-0.5, 0.31};
+
+
+const int zoom = 50;
+
+
+
+
+
 
 const int maxLevel = 3;
 //maksymalny poziom dywanu
@@ -99,19 +104,23 @@ void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 
 void DrawFractal(float x, float y, float pX, float pY, int level)
 {
-	if(level <= 40)	
-		DrawFractal(((x*x - y*y) + pX),( (2 * x*y) + pY), pX, pY, level + 1);
-	else
+	float color = 0.5;
+	if (level <= 100)
 	{
-		if (sqrt(x*x + y*y) < 4)
-			glColor3f(0.0f, 0.0f, 0.0f);
-		else
-			glColor3f(0.0f, 1.0f, 0.0f);
-		glBegin(GL_POINTS);
-				glPointSize(0.0001);
-		glVertex2f(x*50, y*50);
-		glEnd();
+		color = 10.0 / (float)level;
+		if(level > 10)
+		{
+			glBegin(GL_POINTS);
+			if (sqrt(x*x + y*y) <= 4)
+				glColor3f(color, 0.0f, 0.2f);
+			else
+				glColor3f(0.0f, color, 0.2f);
+			glVertex2f(x * zoom, y * zoom);
+			glEnd();
+		}
+		DrawFractal(((x*x - y*y) + pX), ((2 * x*y) + pY), pX, pY, level + 1);
 	}
+	
 }
 
 void RenderScene(void)
@@ -129,13 +138,13 @@ void RenderScene(void)
 		//for (int j = -25; j <= 50; j++)
 		//	DrawFractal((float)i, (float)j, 0);
 
-	for (float i = -3.0 ; i < 3.0; i += 0.005)
-		for (float j = -3.0 ; j < 3.0; j += 0.005)
-			DrawFractal(0,0,i,j,0);
-			
-//	DrawFractal(0, 0, 0);
+	for (float i = -2.5; i < 1.0; i += 0.005)
+		for (float j = -1.0; j < 1.0; j += 0.005)
+			DrawFractal(0, 0, i, j, 0);
 
-	
+	//	DrawFractal(0, 0, 0);
+
+
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania
 
@@ -152,7 +161,7 @@ void MyInit(void)
 
 {
 
-	glClearColor(0.5f,0.3f,0.8f,1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	// Kolor okna wnêtrza okna- ustawiono na lekko jaœniejszy czarny
 
 }

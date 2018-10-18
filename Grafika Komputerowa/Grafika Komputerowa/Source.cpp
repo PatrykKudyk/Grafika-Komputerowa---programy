@@ -10,18 +10,21 @@
 #include <cmath>
 #include <ctime>
 
+typedef float point[2];
 
-float x = -50.0;
-float y = 50.0;
+const float x = -50.0;
+const float y = 50.0;
 //wspolrzedne wierzcholka startowego
 
-int maxLevel = 3;
+const point p = {-0.5, 0.31};
+
+const int maxLevel = 3;
 //maksymalny poziom dywanu
 
-float starterDistortion = 70.0;
+const float starterDistortion = 70.0;
 //startowe znieksztalcenie
 
-float starterSideLength = 100.0;
+const float starterSideLength = 100.0;
 //startowa dlugosc boku kwadratu
 
 /*************************************************************************************/
@@ -29,8 +32,7 @@ float starterSideLength = 100.0;
 // Funkcaja okreœlaj¹ca, co ma byæ rysowane 
 // (zawsze wywo³ywana, gdy trzeba przerysowaæ scenê)
 
-
-void Drawing(float x, float y, float sideLength, int level, float distortion)
+void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 {
 	if (level > maxLevel)
 	{
@@ -69,32 +71,48 @@ void Drawing(float x, float y, float sideLength, int level, float distortion)
 
 		distortion = distortion / 9.0;
 
-		Drawing(x, y, sideLength, level + 1, distortion);
+		DrawCarpet(x, y, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w lewym gornym rogu
 
-		Drawing(x + sideLength, y, sideLength, level + 1, distortion);
+		DrawCarpet(x + sideLength, y, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie u gory
 
-		Drawing(x + 2 * sideLength, y, sideLength, level + 1, distortion);
+		DrawCarpet(x + 2 * sideLength, y, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w prawym gornym rogu
 
-		Drawing(x, y - sideLength, sideLength, level + 1, distortion);
+		DrawCarpet(x, y - sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie z lewej
 
-		Drawing(x + 2 * sideLength, y - sideLength, sideLength, level + 1, distortion);
+		DrawCarpet(x + 2 * sideLength, y - sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie z prawej
 
-		Drawing(x, y - 2 * sideLength, sideLength, level + 1, distortion);
+		DrawCarpet(x, y - 2 * sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w lewym dolnym rogu
 
-		Drawing(x + sideLength, y - 2 * sideLength, sideLength, level + 1, distortion);
+		DrawCarpet(x + sideLength, y - 2 * sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie na dole
 
-		Drawing(x + 2 * sideLength, y - 2 * sideLength, sideLength, level + 1, distortion);
+		DrawCarpet(x + 2 * sideLength, y - 2 * sideLength, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w prawym dolnym rogu
 	}
 }
 
+void DrawFractal(float x, float y, float pX, float pY, int level)
+{
+	if(level <= 40)	
+		DrawFractal(((x*x - y*y) + pX),( (2 * x*y) + pY), pX, pY, level + 1);
+	else
+	{
+		if (sqrt(x*x + y*y) < 4)
+			glColor3f(0.0f, 0.0f, 0.0f);
+		else
+			glColor3f(0.0f, 1.0f, 0.0f);
+		glBegin(GL_POINTS);
+				glPointSize(0.0001);
+		glVertex2f(x*50, y*50);
+		glEnd();
+	}
+}
 
 void RenderScene(void)
 
@@ -103,13 +121,26 @@ void RenderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
 
-	Drawing(x, y, starterSideLength, 0, starterDistortion);
+
+//	DrawCarpet(x, y, starterSideLength, 0, starterDistortion);
 	//Funkcja rysuj¹ca kwadrat
 
+	//for (int i = -25; i <= 50; i++)
+		//for (int j = -25; j <= 50; j++)
+		//	DrawFractal((float)i, (float)j, 0);
+
+	for (float i = -3.0 ; i < 3.0; i += 0.005)
+		for (float j = -3.0 ; j < 3.0; j += 0.005)
+			DrawFractal(0,0,i,j,0);
+			
+//	DrawFractal(0, 0, 0);
+
+	
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania
 
 }
+
 
 /*************************************************************************************/
 
@@ -121,7 +152,7 @@ void MyInit(void)
 
 {
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.5f,0.3f,0.8f,1.0f);
 	// Kolor okna wnêtrza okna- ustawiono na lekko jaœniejszy czarny
 
 }

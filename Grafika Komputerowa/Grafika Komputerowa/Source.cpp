@@ -9,18 +9,27 @@
 #include <gl/glut.h>
 #include <cmath>
 #include <ctime>
-#include <iostream>
+
+//--------------------------------------------------------------------//
+//-------------ZMIENNE GLOBALNE DLA ZBIORU MANDELBROT'A---------------//
+
+const int zoom = 70;
+//zmienna okreslajaca przyblizenie obrazu
+
+const int N = 100;
+//zmienna okreslajaca maksymalna ilosc iteracji
+
+const float krok = 0.001;
+//zmienna okreslajaca dokladnosc obrazu
+
+
+
+//----------------------------------------------------------------------//
+//----------ZMIENNE GLOBALNE DLA DYWANU SIERPINSKIEGO-------------------//
 
 const float x = -50.0;
 const float y = 50.0;
 //wspolrzedne wierzcholka startowego
-
-
-
-const int zoom = 70;
-const int N = 255;
-const float krok = 0.0025;
-
 
 const int maxLevel = 3;
 //maksymalny poziom dywanu
@@ -35,11 +44,12 @@ const float starterSideLength = 100.0;
 
 // Funkcaja okreœlaj¹ca, co ma byæ rysowane 
 // (zawsze wywo³ywana, gdy trzeba przerysowaæ scenê)
-/*
+
 void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 {
 	if (level > maxLevel)
 	{
+		//--------------LOSOWANIE ZNIEKSZTALCENIA----------------------//
 		int draw1 = rand() % 50;
 		float draw2 = (rand() % 50) + 1;
 
@@ -56,16 +66,19 @@ void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 			y += distortion;
 		else
 			y -= distortion;
+		//-------------LOSOWANIE ZNIEKSZTALCENIA--------------------//
+
+
 
 		glBegin(GL_POLYGON);
-		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);
-		glVertex2f(x, y);
-		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);
-		glVertex2f(x, y - sideLength);
-		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);
-		glVertex2f(x + sideLength, y - sideLength);
-		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);
-		glVertex2f(x + sideLength, y);
+		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);	//ustawienie losowego koloru dla wierzcholka
+		glVertex2f(x, y);							//ustawienie odpowiednich wpolrzednych dla wierzcholka
+		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);	//ustawienie losowego koloru dla wierzcholka
+		glVertex2f(x, y - sideLength);				//ustawienie odpowiednich wpolrzednych dla wierzcholka
+		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);	//ustawienie losowego koloru dla wierzcholka
+		glVertex2f(x + sideLength, y - sideLength);	//ustawienie odpowiednich wpolrzednych dla wierzcholka
+		glColor3f((rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1, (rand() % 89 / 100.0) + 0.1);	//ustawienie losowego koloru dla wierzcholka
+		glVertex2f(x + sideLength, y);				//ustawienie odpowiednich wpolrzednych dla wierzcholka
 		glEnd();
 	}
 	else
@@ -74,6 +87,7 @@ void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 		//ustawienie odpowiedniej dlugosci boku
 
 		distortion = distortion / 9.0;
+		//ustawienie odpowiedniego znieksztalcenia
 
 		DrawCarpet(x, y, sideLength, level + 1, distortion);
 		//rysowanie kwadratu znajdujacego sie w lewym gornym rogu
@@ -101,118 +115,52 @@ void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 	}
 }
 
-int SprawdzZbieznosc(float x, float y, float pX, float pY)
-{
-	int iter = 0;
-	for (int i = 0; i <= N; i++)
-	{
-		x = (x*x - y*y + pX);
-		y = ((2 * y*x) + pY);
-		if (sqrt(x*x + y*y) > 4)
-			break;
-		iter++;
-	}
-//	if (iter >= 100)
-		return iter;
-//	else
-//		return 0;
-}
-
-void DrawFractal(float x, float y, float pX, float pY, int level, int maxLevel)
-{
-//	if(level <= maxLevel)
-//		DrawFractal(((x*x - y*y) + pX), ((2 * x*y) + pY), pX, pY, level + 1, maxLevel);
-//	else
-//	{
-		//float color = 0.0;
-		float color = 0.0 + ((float)maxLevel/ 100 );
-		glBegin(GL_POINTS);
-	//	if (level < N)
-	//		glColor3f(color, 0.0f, 0.2f);
-	//	else
-	//		glColor3f(0.0f, 0.0f, 0.0f);
-		glColor3f(color, 0.0f, 0.0f);
-		glVertex2f(x * zoom, y * zoom);
-		glEnd();
-//	}
-}
-
-*/
-
-/*void DrawFractal2(float x, float y, float pX, float pY, int level, float startX, float startY)
-{
-	if (level <= 100)
-	{
-		DrawFractal2(((x*x - y*y) + pX), ((2 * x*y) + pY), pX, pY, level + 1, startX, startY);
-		if (sqrt(x*x + y*y) <= 4)
-		{
-			float color = 0.5;
-			glBegin(GL_LINES);
-			glColor3f(color, 0.0f, 0.2f);
-			glVertex2f(startX * zoom, startY * zoom);
-			glVertex2f(x * zoom, y * zoom);
-			glEnd();
-		}
-
-	}
-
-}
-*/
 int iteracje(float x, float y, float rzecz, float uroj)
 {
-	for (int i = 0; i <= N; i++)
+	float temp;
+	//zmienna, ktora przechowuje wartosc x, zeby mozna bylo obliczyc y
+
+	for (int i = 0; i <= N; i++)	//petla wykona sie tyle razy ile wynosi dokladnosc
 	{
-		x = ((x*x - y*y) + rzecz);
-		y = ((2 * y*x) + uroj);
-		if (sqrt(x*x + y*y) >= 4)
-		{
-			return i;
-		}
+		temp = x;					//przypisanie wartosci x do zmiennej temp
+		x = ((x*x - y*y) + rzecz);	//obliczenie wartosci x ze wzoru na potegowanie liczb zespolonych
+		y = ((2 * y*temp) + uroj);	//obliczenie wartosci y ze wzoru na potegowanie liczb zespolonych
+		if (sqrt(x*x + y*y) >= 4)	//sprawdzenie czy punkt o wspolrzednych x i y jest zbiezny - czyli sprawdzanie czy modul liczby zespolonej = (x + yi) jest <= 2
+			return i;				// zwracana jest ilosc iteracji		
 	}
-	x = (x*x - y*y + rzecz);
-	y = ((2 * y*x) + uroj);
-	if (sqrt(x*x + y*y) >= 4)
-		return N + 1;
+	temp = x;					//przypisanie wartosci x do zmiennej temp
+	x = (x*x - y*y + rzecz);	//obliczenie wartosci x ze wzoru na potegowanie liczb zespolonych
+	y = ((2 * y*temp) + uroj);	//obliczenie wartosci y ze wzoru na potegowanie liczb zespolonych
+	if (sqrt(x*x + y*y) >= 4)	//sprawdzenie czy punkt o wspolrzednych x i y jest zbiezny - czyli sprawdzanie czy modul liczby zespolonej = (x + yi) jest <= 2
+		return N + 1;			// zwracana jest ilosc iteracji		
 	else
-		return N + 2;
+		return N + 2;			//zwracana jest ilosc iteracji, ktora poinformuje program, zeby uzyc koloru czarnego do pomalowania piksela
 }
 
-void DrawFractal3()
+void DrawFractal()
 {
-
-	for (float i = -2; i < 1; i += krok)
-		for (float j = -1.5; j < 1.5; j += krok)
+	for (float i = -2.5; i < 1; i += krok)
+		for (float j = -1.5; j < 1.5; j += krok)	//(i,j) symbolizuje piksel - dla kazdego z osobna jest wiec sprawdzana zbieznosc
 		{
-			int	iter = iteracje(0, 0, i, j);
-			if (iter != N+2 )
+			int	iter = iteracje(0, 0, i, j);		//sprawdzenie poziomu zbieznosci dla liczby zespolonej = (i, jI)
+			if (iter != ( N + 2))					//na podstawie liczby iteracji dobierany jest kolor punktu
 			{
-			//	float hue = float((float)iter / (float)(N + 2));
-				float color = float((255 - (float)iter )/ 255.0);
-				//if(iter > 2)
-			//	std::cout << color << std::endl;
-				glBegin(GL_POINTS);
-				glColor3f(1.0f, color, color);
-				glVertex2f(i * zoom, j * zoom);
-				glEnd();
+				float color = float((200 - (float)iter) / 255.0);	//obliczanie koloru punktu na podstawie liczby iteracji
+				glBegin(GL_POINTS);					//start rysowania punktu
+				glColor3f(1.0f, color, color);		//ustawienie koloru punktu
+				glVertex2f(i * zoom, j * zoom);		//narysowanie punktu w odpowiednich wspolrzednych pomnozonych przez zoom - czyli przyblizenie
+				glEnd();							//koniec funkcji rysowania
 			}
-			else if (iter == N + 2)
+			else if (iter == N + 2)					//jesli ilosc iteracji byla rowna maksymalnej, to malujemy piksel na czarno
 			{
-				glBegin(GL_POINTS);
-				glColor3f(0.0f, 0.0f, 0.0f);
-				glVertex2f(i * zoom, j * zoom);
-				glEnd();
+				glBegin(GL_POINTS);					//start rysowania punktu
+				glColor3f(0.0f, 0.0f, 0.0f);		//ustawienie koloru punktu
+				glVertex2f(i * zoom, j * zoom);		//narysowanie punktu w odpowiednich wspolrzednych pomnozonych przez zoom - czyli przyblizenie
+				glEnd();							//koniec funkcji rysowania
 			}
-		/*	else
-			{
-				int hue = int(255 * iter / (N + 2));
-				float color = float(hue / 255);
-				glBegin(GL_POINTS);
-				glColor3f(color, color, 0.0f);
-				glVertex2f(i * zoom, j * zoom);
-				glEnd();
-			}*/
 		}
 }
+
 
 
 void RenderScene(void)
@@ -224,26 +172,10 @@ void RenderScene(void)
 
 
 //	DrawCarpet(x, y, starterSideLength, 0, starterDistortion);
-	//Funkcja rysuj¹ca kwadrat
+	//Funkcja rysuj¹ca dywan Sierpinskiego
 
-	//for (int i = -25; i <= 50; i++)
-		//for (int j = -25; j <= 50; j++)
-		//	DrawFractal((float)i, (float)j, 0);
-
-//	for (float i = -2.5; i < 1; i += krok)
-//		for (float j = -1; j < 1; j += krok)
-//		{
-//			DrawFractal(i, j, i, j, 1, SprawdzZbieznosc(0,0,i,j));
-//		}
-
-	DrawFractal3();
-
-	//	for (float i = -5; i < 5; i += 0.005)
-	//		for (float j = -5; j < 5; j += 0.005)
-	//			DrawFractal2(0, 0, i, j, 0, i, j);
-
-		//	DrawFractal(0, 0, 0);
-
+	DrawFractal();
+	//Funkcja rysuj¹ca zbiór Mandelbrot'a
 
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania
@@ -261,7 +193,7 @@ void MyInit(void)
 
 {
 
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	// Kolor okna wnêtrza okna- ustawiono na lekko jaœniejszy czarny
 
 }

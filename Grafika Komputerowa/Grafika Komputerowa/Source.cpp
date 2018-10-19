@@ -9,6 +9,7 @@
 #include <gl/glut.h>
 #include <cmath>
 #include <ctime>
+#include <iostream>
 
 const float x = -50.0;
 const float y = 50.0;
@@ -16,11 +17,9 @@ const float y = 50.0;
 
 
 
-const int zoom = 50;
-
-
-
-
+const int zoom = 70;
+const int N = 255;
+const float krok = 0.0025;
 
 
 const int maxLevel = 3;
@@ -36,7 +35,7 @@ const float starterSideLength = 100.0;
 
 // Funkcaja okreœlaj¹ca, co ma byæ rysowane 
 // (zawsze wywo³ywana, gdy trzeba przerysowaæ scenê)
-
+/*
 void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 {
 	if (level > maxLevel)
@@ -102,26 +101,119 @@ void DrawCarpet(float x, float y, float sideLength, int level, float distortion)
 	}
 }
 
-void DrawFractal(float x, float y, float pX, float pY, int level)
+int SprawdzZbieznosc(float x, float y, float pX, float pY)
 {
-	float color = 0.5;
+	int iter = 0;
+	for (int i = 0; i <= N; i++)
+	{
+		x = (x*x - y*y + pX);
+		y = ((2 * y*x) + pY);
+		if (sqrt(x*x + y*y) > 4)
+			break;
+		iter++;
+	}
+//	if (iter >= 100)
+		return iter;
+//	else
+//		return 0;
+}
+
+void DrawFractal(float x, float y, float pX, float pY, int level, int maxLevel)
+{
+//	if(level <= maxLevel)
+//		DrawFractal(((x*x - y*y) + pX), ((2 * x*y) + pY), pX, pY, level + 1, maxLevel);
+//	else
+//	{
+		//float color = 0.0;
+		float color = 0.0 + ((float)maxLevel/ 100 );
+		glBegin(GL_POINTS);
+	//	if (level < N)
+	//		glColor3f(color, 0.0f, 0.2f);
+	//	else
+	//		glColor3f(0.0f, 0.0f, 0.0f);
+		glColor3f(color, 0.0f, 0.0f);
+		glVertex2f(x * zoom, y * zoom);
+		glEnd();
+//	}
+}
+
+*/
+
+/*void DrawFractal2(float x, float y, float pX, float pY, int level, float startX, float startY)
+{
 	if (level <= 100)
 	{
-		color = 10.0 / (float)level;
-		if(level > 10)
+		DrawFractal2(((x*x - y*y) + pX), ((2 * x*y) + pY), pX, pY, level + 1, startX, startY);
+		if (sqrt(x*x + y*y) <= 4)
 		{
-			glBegin(GL_POINTS);
-			if (sqrt(x*x + y*y) <= 4)
-				glColor3f(color, 0.0f, 0.2f);
-			else
-				glColor3f(0.0f, color, 0.2f);
+			float color = 0.5;
+			glBegin(GL_LINES);
+			glColor3f(color, 0.0f, 0.2f);
+			glVertex2f(startX * zoom, startY * zoom);
 			glVertex2f(x * zoom, y * zoom);
 			glEnd();
 		}
-		DrawFractal(((x*x - y*y) + pX), ((2 * x*y) + pY), pX, pY, level + 1);
+
 	}
-	
+
 }
+*/
+int iteracje(float x, float y, float rzecz, float uroj)
+{
+	for (int i = 0; i <= N; i++)
+	{
+		x = ((x*x - y*y) + rzecz);
+		y = ((2 * y*x) + uroj);
+		if (sqrt(x*x + y*y) >= 4)
+		{
+			return i;
+		}
+	}
+	x = (x*x - y*y + rzecz);
+	y = ((2 * y*x) + uroj);
+	if (sqrt(x*x + y*y) >= 4)
+		return N + 1;
+	else
+		return N + 2;
+}
+
+void DrawFractal3()
+{
+
+	for (float i = -2; i < 1; i += krok)
+		for (float j = -1.5; j < 1.5; j += krok)
+		{
+			int	iter = iteracje(0, 0, i, j);
+			if (iter != N+2 )
+			{
+			//	float hue = float((float)iter / (float)(N + 2));
+				float color = float((255 - (float)iter )/ 255.0);
+				//if(iter > 2)
+			//	std::cout << color << std::endl;
+				glBegin(GL_POINTS);
+				glColor3f(1.0f, color, color);
+				glVertex2f(i * zoom, j * zoom);
+				glEnd();
+			}
+			else if (iter == N + 2)
+			{
+				glBegin(GL_POINTS);
+				glColor3f(0.0f, 0.0f, 0.0f);
+				glVertex2f(i * zoom, j * zoom);
+				glEnd();
+			}
+		/*	else
+			{
+				int hue = int(255 * iter / (N + 2));
+				float color = float(hue / 255);
+				glBegin(GL_POINTS);
+				glColor3f(color, color, 0.0f);
+				glVertex2f(i * zoom, j * zoom);
+				glEnd();
+			}*/
+		}
+}
+
 
 void RenderScene(void)
 
@@ -138,11 +230,19 @@ void RenderScene(void)
 		//for (int j = -25; j <= 50; j++)
 		//	DrawFractal((float)i, (float)j, 0);
 
-	for (float i = -2.5; i < 1.0; i += 0.005)
-		for (float j = -1.0; j < 1.0; j += 0.005)
-			DrawFractal(0, 0, i, j, 0);
+//	for (float i = -2.5; i < 1; i += krok)
+//		for (float j = -1; j < 1; j += krok)
+//		{
+//			DrawFractal(i, j, i, j, 1, SprawdzZbieznosc(0,0,i,j));
+//		}
 
-	//	DrawFractal(0, 0, 0);
+	DrawFractal3();
+
+	//	for (float i = -5; i < 5; i += 0.005)
+	//		for (float j = -5; j < 5; j += 0.005)
+	//			DrawFractal2(0, 0, i, j, 0, i, j);
+
+		//	DrawFractal(0, 0, 0);
 
 
 	glFlush();
@@ -161,7 +261,7 @@ void MyInit(void)
 
 {
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	// Kolor okna wnêtrza okna- ustawiono na lekko jaœniejszy czarny
 
 }

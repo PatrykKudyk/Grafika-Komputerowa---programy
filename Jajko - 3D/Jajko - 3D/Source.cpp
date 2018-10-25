@@ -11,7 +11,7 @@
 #include <cmath>
 #include <ctime>
 
-#define M_PI           3.14159265358979323846
+#define M_PI  3.14159265358979323846
 
 typedef float point3[3];
 
@@ -345,7 +345,7 @@ void main(void)
 
 	glutInitWindowSize(500, 500);
 
-	glutCreateWindow("Uk³ad wspó³rzêdnych 3-D");
+	glutCreateWindow("Jajko 3-D");
 
 	glutKeyboardFunc(keys);
 

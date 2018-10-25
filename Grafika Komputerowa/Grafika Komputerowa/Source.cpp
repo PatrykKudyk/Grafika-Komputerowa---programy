@@ -16,7 +16,7 @@
 const int zoom = 70;
 //zmienna okreslajaca przyblizenie obrazu
 
-const int N = 100;
+const int N = 255;
 //zmienna okreslajaca maksymalna ilosc iteracji
 
 const float krok = 0.001;
@@ -125,13 +125,13 @@ int iteracje(float x, float y, float rzecz, float uroj)
 		temp = x;					//przypisanie wartosci x do zmiennej temp
 		x = ((x*x - y*y) + rzecz);	//obliczenie wartosci x ze wzoru na potegowanie liczb zespolonych
 		y = ((2 * y*temp) + uroj);	//obliczenie wartosci y ze wzoru na potegowanie liczb zespolonych
-		if (sqrt(x*x + y*y) >= 4)	//sprawdzenie czy punkt o wspolrzednych x i y jest zbiezny - czyli sprawdzanie czy modul liczby zespolonej = (x + yi) jest <= 2
+		if (sqrt(x*x + y*y) > 4)	//sprawdzenie czy punkt o wspolrzednych x i y jest zbiezny - czyli sprawdzanie czy modul liczby zespolonej = (x + yi) jest <= 2
 			return i;				// zwracana jest ilosc iteracji		
 	}
 	temp = x;					//przypisanie wartosci x do zmiennej temp
 	x = (x*x - y*y + rzecz);	//obliczenie wartosci x ze wzoru na potegowanie liczb zespolonych
 	y = ((2 * y*temp) + uroj);	//obliczenie wartosci y ze wzoru na potegowanie liczb zespolonych
-	if (sqrt(x*x + y*y) >= 4)	//sprawdzenie czy punkt o wspolrzednych x i y jest zbiezny - czyli sprawdzanie czy modul liczby zespolonej = (x + yi) jest <= 2
+	if (sqrt(x*x + y*y) > 4)	//sprawdzenie czy punkt o wspolrzednych x i y jest zbiezny - czyli sprawdzanie czy modul liczby zespolonej = (x + yi) jest <= 2
 		return N + 1;			// zwracana jest ilosc iteracji		
 	else
 		return N + 2;			//zwracana jest ilosc iteracji, ktora poinformuje program, zeby uzyc koloru czarnego do pomalowania piksela
@@ -145,9 +145,10 @@ void DrawFractal()
 			int	iter = iteracje(0, 0, i, j);		//sprawdzenie poziomu zbieznosci dla liczby zespolonej = (i, jI)
 			if (iter != ( N + 2))					//na podstawie liczby iteracji dobierany jest kolor punktu
 			{
-				float color = float((200 - (float)iter) / 255.0);	//obliczanie koloru punktu na podstawie liczby iteracji
+				float color = float((float)iter / N) + 0.05;	//obliczanie koloru punktu na podstawie liczby iteracji
+				float color2 = float((float)iter / (2*N)) + 0.05;	//obliczanie koloru punktu na podstawie liczby iteracji
 				glBegin(GL_POINTS);					//start rysowania punktu
-				glColor3f(1.0f, color, color);		//ustawienie koloru punktu
+				glColor3f(color2, 0.0f, color);		//ustawienie koloru punktu
 				glVertex2f(i * zoom, j * zoom);		//narysowanie punktu w odpowiednich wspolrzednych pomnozonych przez zoom - czyli przyblizenie
 				glEnd();							//koniec funkcji rysowania
 			}

@@ -28,7 +28,7 @@ struct Point
 
 
 //------------ZMIENNE GLOBALNE ------------------------//
-int N = 20;			//wielkosc tablicy
+static int N = 20;			//wielkosc tablicy
 
 Point **tablica;		//dynamiczna tablica struktur punktowych
 
@@ -36,14 +36,16 @@ Point **kolory;			//dynamiczna tablica kolorów
 
 int model = 1;  // 1- punkty, 2- siatka, 3 - wype³nione trójk¹ty
 
+static GLfloat theta[] = { 0.0, 0.0, 0.0 }; // trzy k¹ty obrotu
+
 
 
 void DrawEggPoints()
 {
 	glBegin(GL_POINTS);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
 			glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
 	glEnd();
 }
@@ -51,17 +53,17 @@ void DrawEggPoints()
 void DrawEggLines()
 {
 	
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i <= N; i++)
 	{
 		glBegin(GL_LINE_STRIP);
 		glColor3f(1.0f, 1.0f, 1.0f);
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j <= N; j++)
 			glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
 		glEnd();
 
 		glBegin(GL_LINE_STRIP);
 		glColor3f(1.0f, 1.0f, 1.0f);
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j <= N; j++)
 			glVertex3f(tablica[j][i].x, tablica[j][i].y - 5.0f, tablica[j][i].z);
 		glEnd();
 
@@ -72,11 +74,11 @@ void DrawEggLines()
 
 void DrawEggTriangle()
 {
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
 		{
-			if(i < (N - 1))
-				if(j < (N - 1))
+			if(i <= (N - 1))
+				if(j <= (N - 1))
 				{
 				glBegin(GL_TRIANGLES);
 				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
@@ -122,12 +124,12 @@ void DrawEggTriangle()
 
 void GeneratingColors()
 {
-	kolory = new Point*[N];
-	for (int i = 0; i < N; i++)
-		kolory[i] = new Point[N];
+	kolory = new Point*[N+1];
+	for (int i = 0; i <= N; i++)
+		kolory[i] = new Point[N+1];
 
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
 		{
 			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
 			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
@@ -138,12 +140,12 @@ void GeneratingColors()
 void Egg()
 {
 
-	tablica = new Point*[N];
-	for (int i = 0; i < N; i++)
-		tablica[i] = new Point[N];
+	tablica = new Point*[N+1];
+	for (int i = 0; i <= N; i++)
+		tablica[i] = new Point[N+1];
 	
-	for(int i = 0; i < N; i++)
-		for(int j = 0; j < N; j++)
+	for(int i = 0; i <= N; i++)
+		for(int j = 0; j <= N; j++)
 		{
 			float u = (float)i / (float)N;
 			float v = (float)j / (float)N;
@@ -168,6 +170,20 @@ void Egg()
 	}
 }
 
+void spinEgg()
+{
+
+	theta[0] -= 0.5;
+	if (theta[0] > 360.0) theta[0] -= 360.0;
+
+	theta[1] -= 0.5;
+	if (theta[1] > 360.0) theta[1] -= 360.0;
+
+	theta[2] -= 0.5;
+	if (theta[2] > 360.0) theta[2] -= 360.0;
+
+	glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
+}
 
 
 void Axes(void)
@@ -231,6 +247,13 @@ void RenderScene(void)
 	*/
 
 	//glRotated(35.0, 1.0, 1.0, 1.0);  // Obrót o 60 stopni
+	
+	glRotatef(theta[0], 1.0, 0.0, 0.0);
+
+	glRotatef(theta[1], 0.0, 1.0, 0.0);
+
+	glRotatef(theta[2], 0.0, 0.0, 1.0);
+	
 	Egg();
 
 	glFlush();
@@ -325,6 +348,8 @@ void main(void)
 	glutCreateWindow("Uk³ad wspó³rzêdnych 3-D");
 
 	glutKeyboardFunc(keys);
+
+	glutIdleFunc(spinEgg);
 
 	glutDisplayFunc(RenderScene);
 	// Okreœlenie, ¿e funkcja RenderScene bêdzie funkcj¹ zwrotn¹

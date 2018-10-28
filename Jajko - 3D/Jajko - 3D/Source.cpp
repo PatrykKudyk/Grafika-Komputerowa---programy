@@ -10,6 +10,7 @@
 #include <gl/glut.h>
 #include <cmath>
 #include <ctime>
+#include <iostream>
 
 #define M_PI  3.14159265358979323846
 
@@ -153,6 +154,18 @@ void Egg()
 			tablica[i][j].y = (160 * pow(u, 4) - 320 * pow(u, 3) + 160 * u*u);
 			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sin((float)M_PI*v));
 		}
+
+	/*for(int i = 0; i <= N; i++)
+	{
+		for (int j = 0; j <= N; j++)
+			std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
+	
+		std::cout << std::endl;
+	}
+
+	std::cin.get();
+	std::cin.get();
+	*/
 
 	switch(model)
 	{

@@ -163,6 +163,51 @@ void DrawFractal()
 }
 
 
+int mandelbrot(float x, float y, float c_re, float c_im)
+{
+	int iterations = 0;
+	while (x*x + y * y <= 4 && iterations < 50)
+	{
+		float x_new = x * x - y * y + c_re;
+		y = 2 * x*y + c_im;
+		x = x_new;
+		iterations++;
+	}
+	if (iterations < 50) return 255;
+	else return 0;
+}
+
+void draw()
+{
+	float x_min = -2.0;
+	float x_max = 1.1;
+	float y_max = 1.1;
+	float y_min = -1.25;
+
+	for (float i = x_min; i < x_max; i += 0.0025)
+	{
+		for (float j = y_min; j < y_max; j += 0.0025)
+		{
+			float value = mandelbrot(0, 0, i, j);
+			if (value == 0)
+			{
+				glBegin(GL_POINTS);
+				glColor3f(0.0f, 0.0f, 0.0f);
+				glVertex2f(i*50, j*50);
+				glEnd();
+			}
+			else
+			{
+				glBegin(GL_POINTS);
+				glColor3f(1.0f, 0.0f, 0.0f);
+				glVertex2f(i*50, j*50);
+				glEnd();
+			}
+		}
+	}
+}
+
+
 
 void RenderScene(void)
 
@@ -175,8 +220,10 @@ void RenderScene(void)
 //	DrawCarpet(x, y, starterSideLength, 0, starterDistortion);
 	//Funkcja rysuj¹ca dywan Sierpinskiego
 
-	DrawFractal();
+//	DrawFractal();
 	//Funkcja rysuj¹ca zbiór Mandelbrot'a
+
+	draw();
 
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania

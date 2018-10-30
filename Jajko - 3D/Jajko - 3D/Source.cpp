@@ -132,9 +132,17 @@ void GeneratingColors()
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
 		{
-			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
+			if (j == N)
+			{
+				kolory[i][j].x = kolory[i][0].x;
+				kolory[i][j].y = kolory[i][0].y;
+				kolory[i][j].z = kolory[i][0].z;
+			}
+			else {
+				kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
+				kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
+				kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
+			}
 		}
 }
 

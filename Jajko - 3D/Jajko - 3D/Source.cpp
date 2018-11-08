@@ -29,7 +29,7 @@ struct Point
 
 
 //------------ZMIENNE GLOBALNE ------------------------//
-static int N = 20;			//wielkosc tablicy
+static int N = 40;			//wielkosc tablicy
 
 Point **tablica;		//dynamiczna tablica struktur punktowych
 
@@ -53,7 +53,7 @@ void DrawEggPoints()
 
 void DrawEggLines()
 {
-	
+
 	for (int i = 0; i <= N; i++)
 	{
 		glBegin(GL_LINE_STRIP);
@@ -69,7 +69,7 @@ void DrawEggLines()
 		glEnd();
 
 	}
-		
+
 
 }
 
@@ -78,83 +78,107 @@ void DrawEggTriangle()
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
 		{
-			if(i <= (N - 1))
-				if(j <= (N - 1))
-				{
-				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
-				glVertex3f(tablica[i + 1][j+1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
-				glColor3f(kolory[i][j+1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
-				glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
-				glEnd();
-				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[i+1][j].x, kolory[i+1][j].y, kolory[i+1][j].z);
-				glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
-				glColor3f(kolory[i+1][j+1].x, kolory[i+1][j+1].y, kolory[i+1][j+1].z);
-				glVertex3f(tablica[i+1][j + 1].x, tablica[i+1][j + 1].y - 5.0f, tablica[i+1][j + 1].z);
-				glEnd();
-
-				}
-				else 
+			if (i <= (N - 1))
+			{
+				if (j <= (N - 1))
 				{
 					glBegin(GL_TRIANGLES);
 					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
-					glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
-					glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
-					glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);
+					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
+					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
+					glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
+					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
 					glEnd();
-					
 					glBegin(GL_TRIANGLES);
 					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
-					glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
-					glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
-					glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
+					glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
+					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
+					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
+					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
 					glEnd();
-
 				}
+			}
+			else
+			{
+				glBegin(GL_TRIANGLES);
+				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
+				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
+				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
+				glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
+				glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);
+				glEnd();
+
+				glBegin(GL_TRIANGLES);
+				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
+				glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
+				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
+				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
+				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
+				glEnd();
+			}
 		}
 }
 
 void GeneratingColors()
 {
-	kolory = new Point*[N+1];
+	kolory = new Point*[N + 1];
 	for (int i = 0; i <= N; i++)
-		kolory[i] = new Point[N+1];
+		kolory[i] = new Point[N + 1];
 
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
 		{
-			if (j == N)
+
+			//	else {
+			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
+			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
+			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
+			//	}
+		}
+
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
+		{
+			if (j == N - 1)
 			{
 				kolory[i][j].x = kolory[i][0].x;
 				kolory[i][j].y = kolory[i][0].y;
 				kolory[i][j].z = kolory[i][0].z;
 			}
-			else {
-				kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
-				kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
-				kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
-			}
 		}
+
+
+
+	/*
+	for (int i = 0; i <= N; i++)
+	{
+		for(int j = 0 ; j <= N; j++)
+			std::cout << "X = " << kolory[i][j].x << "\t";
+		std::cout << std::endl;
+		for (int j = 0; j <= N; j++)
+			std::cout << "Y = " << kolory[i][j].y << "\t";
+		std::cout << std::endl;
+		for (int j = 0; j <= N; j++)
+			std::cout << "Z = " << kolory[i][j].z << "\t";
+		std::cout << std::endl << std::endl;
+	}
+	std::cin.get();
+	std::cin.get();*/
 }
 
 void Egg()
 {
 
-	tablica = new Point*[N+1];
+	tablica = new Point*[N + 1];
 	for (int i = 0; i <= N; i++)
-		tablica[i] = new Point[N+1];
-	
-	for(int i = 0; i <= N; i++)
-		for(int j = 0; j <= N; j++)
+		tablica[i] = new Point[N + 1];
+
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
 		{
 			float u = (float)i / (float)N;
 			float v = (float)j / (float)N;
@@ -167,7 +191,7 @@ void Egg()
 	{
 		for (int j = 0; j <= N; j++)
 			std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
-	
+
 		std::cout << std::endl;
 	}
 
@@ -175,7 +199,7 @@ void Egg()
 	std::cin.get();
 	*/
 
-	switch(model)
+	switch (model)
 	{
 	case 1:
 		DrawEggPoints();
@@ -194,13 +218,13 @@ void Egg()
 void spinEgg()
 {
 
-	theta[0] -= 0.5;
+	theta[0] -= 0.25;
 	if (theta[0] > 360.0) theta[0] -= 360.0;
 
-	theta[1] -= 0.5;
+	theta[1] -= 0.25;
 	if (theta[1] > 360.0) theta[1] -= 360.0;
 
-	theta[2] -= 0.5;
+	theta[2] -= 0.25;
 	if (theta[2] > 360.0) theta[2] -= 360.0;
 
 	glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
@@ -268,13 +292,12 @@ void RenderScene(void)
 	*/
 
 	//glRotated(35.0, 1.0, 1.0, 1.0);  // Obrót o 60 stopni
-	
+
+
 	glRotatef(theta[0], 1.0, 0.0, 0.0);
-
 	glRotatef(theta[1], 0.0, 1.0, 0.0);
-
 	glRotatef(theta[2], 0.0, 0.0, 1.0);
-	
+
 	Egg();
 
 	glFlush();

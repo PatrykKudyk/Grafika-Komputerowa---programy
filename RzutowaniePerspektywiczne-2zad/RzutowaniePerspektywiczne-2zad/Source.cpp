@@ -33,6 +33,8 @@ Point **kolory;			//dynamiczna tablica kolorów
 
 float promien = 20.0;
 
+float cosPhi, sinPhi, cosTheta, sinTheta;
+
 static GLfloat viewer[] = { 0.0, 0.0, 10.0 };
 // inicjalizacja po³o¿enia obserwatora
 
@@ -292,6 +294,13 @@ void Axes(void)
 // Funkcja okreœlaj¹ca co ma byæ rysowane (zawsze wywo³ywana, gdy trzeba 
 // przerysowaæ scenê)
 
+void AnglesCounting()
+{
+	cosTheta = viewer[0] / (float)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]);
+	sinTheta = viewer[2] / viewer[0];
+	cosPhi = (float)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) / promien;
+	sinPhi = viewer[1] / promien;
+}
 
 
 void RenderScene(void)
@@ -309,23 +318,41 @@ void RenderScene(void)
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
 
-
+	
+/*
 	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
 	{
-		viewer[0] = 
+		theta[0] += delta_x*pix2angleX;
+		theta[1] += delta_y*pix2angleY;
+
 	}                                  // do ró¿nicy po³o¿eñ kursora myszy
 
 	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
 	{
 		GLfloat temp = viewer[2];
-		if (viewer[2] >= 0.0 && viewer[2] <= 20.0)
+		if (viewer[2] >= 7.0 && viewer[2] <= 30.0)
 			viewer[2] += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
-		if (viewer[2] < 0.0 || viewer[2] > 20.0)
+		if (viewer[2] < 7.0 || viewer[2] > 30.0)
 			viewer[2] = temp;
 	}
+	*/
+	
+	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
+	{
+		AnglesCounting();
+		viewer[0] = promien*cosTheta*cosPhi;
+		viewer[1] = promien*sinPhi;
+		viewer[2] = promien*sinTheta*cosPhi;
+	}                                  // do ró¿nicy po³o¿eñ kursora myszy
 
-	glRotatef(theta[0], 0.0, 1.0, 0.0);  //obrót obiektu o nowy k¹t
-	glRotatef(theta[1], 1.0, 0.0, 0.0);  //obrót obiektu o nowy k¹t
+	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
+	{
+		promien += delta_y*pix2angleY;
+		viewer[2] = promien;
+	}
+	
+	//glRotatef(theta[0], 0.0, 1.0, 0.0);  //obrót obiektu o nowy k¹t
+	//glRotatef(theta[1], 1.0, 0.0, 0.0);  //obrót obiektu o nowy k¹t
 										 
 	/*
 	glRotatef(theta1[0], 1.0, 0.0, 0.0);								 
@@ -333,7 +360,7 @@ void RenderScene(void)
 	glRotatef(theta1[2], 0.0, 0.0, 1.0);
 	*/
 
-	glColor3f(1.0f, 1.0f, 1.0f);
+	//glColor3f(1.0f, 1.0f, 1.0f);
 	// Ustawienie koloru rysowania na bia³y
 
 	//glutWireTeapot(3.0);

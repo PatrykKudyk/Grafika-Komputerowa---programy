@@ -111,7 +111,7 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x, A.y, A.z);
 	glEnd();
 
-
+	
 	glBegin(GL_LINE_STRIP);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glVertex3f(A.x, A.y, A.z);
@@ -140,7 +140,7 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
 	glEnd();
-
+	
 }
 
 void RysowanieZielony(Point A, float sideLength)
@@ -422,6 +422,7 @@ void DrawSierpinski(Point A, float sideLength, int level)
 
 
 }
+
 
 void spinPyramid()
 {

@@ -31,11 +31,14 @@ Point **tablica;		//dynamiczna tablica struktur punktowych
 
 Point **kolory;			//dynamiczna tablica kolorów
 
-float promien = 20.0;
+GLfloat promien = 20.0;
 
-float cosPhi, sinPhi, cosTheta, sinTheta;
+bool kierunek = true;  //true - dodawanie, false - odejmowanie
 
-static GLfloat viewer[] = { 0.0, 0.0, 10.0 };
+GLfloat PHI = 0.0, THETA = 0.0;
+//GLfloat cosPhi = 0.5, sinPhi = 0.5, cosTheta = 0.5, sinTheta = 0.5;
+
+static GLfloat viewer[] = { 0.1, 0.1, 10.0 };
 // inicjalizacja po³o¿enia obserwatora
 
 static GLfloat theta[] = { 0.0, 0.0 };   // k¹t obrotu obiektu
@@ -294,13 +297,77 @@ void Axes(void)
 // Funkcja okreœlaj¹ca co ma byæ rysowane (zawsze wywo³ywana, gdy trzeba 
 // przerysowaæ scenê)
 
+void viewerPlacing()
+{
+	viewer[0] = promien*cos(THETA)*cos(PHI);
+	viewer[1] = promien*sin(PHI);
+	viewer[2] = promien*sin(THETA)*cos(PHI);
+}
+
 void AnglesCounting()
 {
-	cosTheta = viewer[0] / (float)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]);
-	sinTheta = viewer[2] / viewer[0];
-	cosPhi = (float)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) / promien;
-	sinPhi = viewer[1] / promien;
+	/*GLfloat temp1 = cosTheta, temp2 = sinTheta, temp3 = cosPhi, temp4 = sinPhi;
+	cosTheta = viewer[0] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]);
+	if (cosTheta < -1 || cosTheta > 1)
+		cosTheta = temp1;
+	sinTheta = viewer[2] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]);
+	if (sinTheta < -1 || cosTheta > 1)
+		sinTheta = temp1;
+	//cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) /	(GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1]*viewer[1]);
+	cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) / promien;
+	if (cosPhi < -1 || cosTheta > 1)
+		cosPhi = temp1;
+//	sinPhi = viewer[1] / (GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1] * viewer[1]);
+	sinPhi = viewer[1] /promien;
+
+	if (sinPhi < -1 || cosTheta > 1)
+		sinPhi = temp1;*/
+
+/*
+	GLfloat temp1 = PHI, temp2 = THETA;
+	if (PHI >= 0 && PHI <= M_PI)
+	PHI += delta_y*pix2angleY / 40.0;
+	if (PHI < 0 || PHI > 2 * M_PI)
+		PHI = temp1;
+	if (THETA >= 0 && THETA <= M_PI)
+	THETA += delta_x*pix2angleX / 40.0;
+	if (THETA < 0 || THETA > 2 * M_PI)
+		THETA = temp2;
+	*/
+
+	GLfloat temp1 = PHI, temp2 = THETA;
+	if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
+	{
+			PHI += delta_y*pix2angleY / 20.0;
+			THETA += delta_x*pix2angleX / 20.0;
+	}
+	viewerPlacing();
+	if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
+	{
+		PHI = temp1;
+		THETA = temp2;
+	}
+
+	/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
+		if (kierunek == true)
+			kierunek = false;
+		else
+			kierunek = true;
+	
+	if(kierunek)
+	{
+		PHI += delta_y*pix2angleY / 40.0;
+		THETA += delta_x*pix2angleX / 40.0;
+	}
+	else
+	{
+		PHI = PHI * (-1.0);
+		THETA = THETA * (-1.0);
+	}
+	*/
+	
 }
+
 
 
 void RenderScene(void)
@@ -312,13 +379,15 @@ void RenderScene(void)
 	glLoadIdentity();
 	// Czyszczenie macierzy bie??cej
 
+
+
 	//gluLookAt(5.0, 2.0, 10.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0);
 	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	// Zdefiniowanie po³o¿enia obserwatora
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
 
-	
+
 /*
 	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
 	{
@@ -336,26 +405,28 @@ void RenderScene(void)
 			viewer[2] = temp;
 	}
 	*/
-	
+
 	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
 	{
 		AnglesCounting();
-		viewer[0] = promien*cosTheta*cosPhi;
-		viewer[1] = promien*sinPhi;
-		viewer[2] = promien*sinTheta*cosPhi;
 	}                                  // do ró¿nicy po³o¿eñ kursora myszy
 
 	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
 	{
-		promien += delta_y*pix2angleY;
-		viewer[2] = promien;
+		GLfloat temp = promien;
+		if (promien >= 7.0 && promien <= 30.0)
+			promien += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
+		if (promien < 7.0 || promien > 30.0)
+			promien = temp;
 	}
-	
+
+	viewerPlacing();
+
 	//glRotatef(theta[0], 0.0, 1.0, 0.0);  //obrót obiektu o nowy k¹t
 	//glRotatef(theta[1], 1.0, 0.0, 0.0);  //obrót obiektu o nowy k¹t
-										 
+
 	/*
-	glRotatef(theta1[0], 1.0, 0.0, 0.0);								 
+	glRotatef(theta1[0], 1.0, 0.0, 0.0);
 	glRotatef(theta1[1], 0.0, 1.0, 0.0);
 	glRotatef(theta1[2], 0.0, 0.0, 1.0);
 	*/

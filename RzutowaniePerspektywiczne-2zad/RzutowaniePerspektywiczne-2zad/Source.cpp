@@ -33,6 +33,8 @@ Point **kolory;			//dynamiczna tablica kolorów
 
 GLfloat promien = 20.0;
 
+float y = 1.0f;
+
 bool kierunek = true;  //true - dodawanie, false - odejmowanie
 
 GLfloat PHI = 0.0, THETA = 0.0;
@@ -335,18 +337,18 @@ void AnglesCounting()
 		THETA = temp2;
 	*/
 
-	GLfloat temp1 = PHI, temp2 = THETA;
-	if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
-	{
-			PHI += delta_y*pix2angleY / 20.0;
-			THETA += delta_x*pix2angleX / 20.0;
-	}
-	viewerPlacing();
-	if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
-	{
-		PHI = temp1;
-		THETA = temp2;
-	}
+	//GLfloat temp1 = PHI, temp2 = THETA;
+	//if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
+	//{
+			//PHI += delta_y*pix2angleY / 20.0;
+			//THETA += delta_x*pix2angleX / 20.0;
+	//}
+	//viewerPlacing();
+	//if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
+	//{
+	//	PHI = temp1;
+	//	THETA = temp2;
+	//}
 
 	/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
 		if (kierunek == true)
@@ -366,6 +368,16 @@ void AnglesCounting()
 	}
 	*/
 	
+	PHI += delta_y*pix2angleY;// / 40.0;
+//	PHI = fmod(PHI, M_PI);
+	THETA += delta_x*pix2angleX;// / 40.0;
+//	THETA = fmod(THETA, M_PI);
+
+	if (cosf(PHI) >= 0.0f)
+		y = 1.0f;
+	else
+		y = -1.0f;
+
 }
 
 
@@ -382,7 +394,7 @@ void RenderScene(void)
 
 
 	//gluLookAt(5.0, 2.0, 10.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0);
-	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, y, 0.0);
 	// Zdefiniowanie po³o¿enia obserwatora
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
@@ -473,8 +485,8 @@ void MyInit(void)
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
 {
 
-	pix2angleX = 360.0 / (float)horizontal;  // przeliczenie pikseli na stopnie
-	pix2angleY = 360.0 / (float)vertical;  // przeliczenie pikseli na stopnie
+	pix2angleX = 2 * M_PI / (float)horizontal;  // przeliczenie pikseli na stopnie
+	pix2angleY = 2 * M_PI / (float)vertical;  // przeliczenie pikseli na stopnie
 
 	glMatrixMode(GL_PROJECTION);
 	// Prze³¹czenie macierzy bie¿¹cej na macierz projekcji

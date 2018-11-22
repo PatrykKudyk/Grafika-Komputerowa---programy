@@ -25,6 +25,25 @@ struct Point
 	float z;
 };
 
+static GLfloat theta[] = { 0.0, 0.0, 0.0 }; // trzy k¹ty obrotu
+
+float wartosc = -0.015;
+//------------ZMIENNE GLOBALNE ------------------------//
+
+int maxLevel = 0;		//maksymalny poziom algorytmu
+
+int spin = 0;			//okresla kierunek obrotu piramidy
+int stop = 0;
+
+static float startSideLength = 10.0; //dlugosc boku pierwszego ostroslupa
+
+Point startPoint = { { -5.0f } ,{ -2.5f },{ -5.0f } };
+//Point startPoint = { {((-N)/2.0)}, {(-sqrt(startSideLength*(startSideLength / 2.0)))} , {((-N)/2.0)}};
+
+float viewerCamera = 1.0;
+
+int model = 1;  // 1- czerwony, 2- niebieski, 3 - zielony, 4 - fioletowy
+
 static int N = 40;			//wielkosc tablicy
 
 Point **tablica;		//dynamiczna tablica struktur punktowych
@@ -41,7 +60,9 @@ GLfloat PHI = 0.0, THETA = 0.0;
 static GLfloat viewer[] = { 0.1, 0.1, 10.0 };
 // inicjalizacja po³o¿enia obserwatora
 
-static GLfloat theta[] = { 0.0, 0.0 };   // k¹t obrotu obiektu
+//static GLfloat viewingPoint[] = { 0.0, 0.0, 0.0 };
+
+//static GLfloat theta[] = { 0.0, 0.0 };   // k¹t obrotu obiektu
 static GLfloat pix2angleX;     // przelicznik pikseli na stopnie
 static GLfloat pix2angleY;     // przelicznik pikseli na stopnie
 
@@ -175,87 +196,6 @@ void DrawEggTriangle()
 		}
 }
 
-void GeneratingColors()
-{
-	kolory = new Point*[N + 1];
-	for (int i = 0; i <= N; i++)
-		kolory[i] = new Point[N + 1];
-
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-
-			//	else {
-			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
-			//	}
-		}
-
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-			if (j == N - 1)
-			{
-				kolory[i][j].x = kolory[i][0].x;
-				kolory[i][j].y = kolory[i][0].y;
-				kolory[i][j].z = kolory[i][0].z;
-			}
-		}
-
-
-
-	/*
-	for (int i = 0; i <= N; i++)
-	{
-	for(int j = 0 ; j <= N; j++)
-	std::cout << "X = " << kolory[i][j].x << "\t";
-	std::cout << std::endl;
-	for (int j = 0; j <= N; j++)
-	std::cout << "Y = " << kolory[i][j].y << "\t";
-	std::cout << std::endl;
-	for (int j = 0; j <= N; j++)
-	std::cout << "Z = " << kolory[i][j].z << "\t";
-	std::cout << std::endl << std::endl;
-	}
-	std::cin.get();
-	std::cin.get();*/
-	tablica = new Point*[N + 1];
-	for (int i = 0; i <= N; i++)
-		tablica[i] = new Point[N + 1];
-
-}
-
-void Egg()
-{
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-			float u = (float)i / (float)N;
-			float v = (float)j / (float)N;
-			tablica[i][j].x = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*cos((float)M_PI*v));
-			tablica[i][j].y = (160 * pow(u, 4) - 320 * pow(u, 3) + 160 * u*u);
-			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sin((float)M_PI*v));
-		}
-
-	/*for(int i = 0; i <= N; i++)
-	{
-	for (int j = 0; j <= N; j++)
-	std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
-
-	std::cout << std::endl;
-	}
-
-	std::cin.get();
-	std::cin.get();
-	*/
-
-	DrawEggTriangle();
-
-
-}
-
-
 void Axes(void)
 {
 
@@ -294,11 +234,380 @@ void Axes(void)
 
 /*************************************************************************************/
 
+void RysowanieCzerwony(Point A, float sideLength)
+{
+	glBegin(GL_POLYGON);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.9f, 0.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.8f, 0.0f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.7f, 0.0f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.6f, 0.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+
+
+	glBegin(GL_LINE_STRIP);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+
+}
+
+void RysowanieZielony(Point A, float sideLength)
+{
+	glBegin(GL_POLYGON);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.9f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.8f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.7f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.6f, 0.0f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+
+
+	glBegin(GL_LINE_STRIP);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+}
+
+void RysowanieNiebieski(Point A, float sideLength)
+{
+	glBegin(GL_POLYGON);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.0f, 0.9f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.0f, 0.8f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.0f, 0.7f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.0f, 0.0f, 0.6f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+
+
+	glBegin(GL_LINE_STRIP);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+}
+
+void RysowanieFioletowy(Point A, float sideLength)
+{
+	glBegin(GL_POLYGON);
+	glColor3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.9f, 0.0f, 0.9f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.8f, 0.0f, 0.8f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.7f, 0.0f, 0.7f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+	glColor3f(0.6f, 0.0f, 0.6f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+
+
+	glBegin(GL_LINE_STRIP);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glEnd();
+}
+
+void DrawSierpinski(Point A, float sideLength, int level)
+{
+	if (level >= maxLevel)
+	{
+		switch (model)
+		{
+		case 1:
+			RysowanieCzerwony(A, sideLength);
+			break;
+		case 2:
+			RysowanieNiebieski(A, sideLength);
+			break;
+		case 3:
+			RysowanieZielony(A, sideLength);
+			break;
+		case 4:
+			RysowanieFioletowy(A, sideLength);
+			break;
+		default:
+			break;
+		}
+
+
+	}
+	else
+	{
+		sideLength = sideLength / 2.0;
+		level += 1;
+		DrawSierpinski(A, sideLength, level);
+		A.x += sideLength;
+		DrawSierpinski(A, sideLength, level);
+		A.x -= sideLength;
+		A.z += sideLength;
+		DrawSierpinski(A, sideLength, level);
+		A.x += sideLength;
+		DrawSierpinski(A, sideLength, level);
+		A.x -= sideLength;
+		A.z -= sideLength;
+		A.y += sqrt(sideLength*(sideLength / 2.0));
+		A.x += (sideLength / 2.0);
+		A.z += (sideLength / 2.0);
+		DrawSierpinski(A, sideLength, level);
+	}
+
+
+	/*
+	glBegin(GL_LINE_STRIP);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(-5.0, 0.0,-5.0);
+	glVertex3f(5.0, 0.0, -5.0);
+	glVertex3f(5.0, 0.0, 5.0);
+	glVertex3f(-5.0, 0.0, 5.0);
+	glVertex3f(-5.0, 0.0, -5.0);
+
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(-5.0, 0.0, -5.0);
+	glVertex3f(0.0,5.0,0.0);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(5.0, 0.0, -5.0);
+	glVertex3f(0.0, 5.0, 0.0);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(5.0, 0.0, 5.0);
+	glVertex3f(0.0, 5.0, 0.0);
+	glEnd();
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(-5.0, 0.0, 5.0);
+	glVertex3f(0.0, 5.0, 0.0);
+	glEnd();
+
+	*/
+
+
+
+
+
+}
+
+void spinPyramid()
+{
+	if (stop)
+	{
+		if (spin == 0)
+		{
+			theta[0] += wartosc;
+			if (theta[0] < -30.0)  wartosc = 0.015;
+			if (theta[0] > 0.0) wartosc = -0.015;
+			theta[1] -= 0.25;
+		}
+		else
+		{
+			theta[0] += wartosc;
+			if (theta[0] < -30.0)  wartosc = 0.015;
+			if (theta[0] > 0.0) wartosc = -0.015;
+			theta[1] += 0.25;
+		}
+		glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
+	}
+}
+
+
 // Funkcja okreœlaj¹ca co ma byæ rysowane (zawsze wywo³ywana, gdy trzeba 
 // przerysowaæ scenê)
 
 void viewerPlacing()
 {
+
 	viewer[0] = promien*cos(THETA)*cos(PHI);
 	viewer[1] = promien*sin(PHI);
 	viewer[2] = promien*sin(THETA)*cos(PHI);
@@ -335,18 +644,26 @@ void AnglesCounting()
 	THETA = temp2;
 	*/
 
-	GLfloat temp1 = PHI, temp2 = THETA;
-	if (!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
-	{
-		PHI += delta_y*pix2angleY / 20.0;
-		THETA += delta_x*pix2angleX / 20.0;
-	}
-	viewerPlacing();
-	if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
-	{
-		PHI = temp1;
-		THETA = temp2;
-	}
+	//GLfloat temp1 = PHI, temp2 = THETA;
+	//if (!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
+	//{
+	PHI += delta_y*pix2angleY;// / 40.0;
+//	PHI = fmod(PHI, M_PI);
+	THETA += delta_x*pix2angleX;// / 40.0;
+//	THETA = fmod(THETA, M_PI);
+
+	if (cosf(PHI) >= 0.0f)
+		viewerCamera = 1.0f;
+	else
+		viewerCamera = -1.0f;
+
+//	}
+//	viewerPlacing();
+//	if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
+//	{
+//		PHI = temp1;
+//		THETA = temp2;
+//	}
 
 	/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
 	if (kierunek == true)
@@ -368,21 +685,16 @@ void AnglesCounting()
 
 }
 
-
-
 void RenderScene(void)
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
 
 	glLoadIdentity();
 	// Czyszczenie macierzy bie??cej
 
-
-
 	//gluLookAt(5.0, 2.0, 10.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0);
-	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, viewerCamera, 0.0);
 	// Zdefiniowanie po³o¿enia obserwatora
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
@@ -414,9 +726,9 @@ void RenderScene(void)
 	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
 	{
 		GLfloat temp = promien;
-		if (promien >= 7.0 && promien <= 30.0)
+		if (promien >= sqrtf(startPoint.x*startPoint.x + startPoint.y*startPoint.y + startPoint.z*startPoint.z) + 1.0)
 			promien += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
-		if (promien < 7.0 || promien > 30.0)
+		if (promien < sqrtf(startPoint.x*startPoint.x + startPoint.y*startPoint.y + startPoint.z*startPoint.z) + 1.0)
 			promien = temp;
 	}
 
@@ -436,7 +748,15 @@ void RenderScene(void)
 
 	//glutWireTeapot(3.0);
 
-	Egg();
+	glRotatef(theta[0], 1.0, 0.0, 0.0);
+
+	glRotatef(theta[1], 0.0, 1.0, 0.0);
+
+	glRotatef(theta[2], 0.0, 0.0, 1.0);
+
+
+	DrawSierpinski(startPoint, startSideLength, 0);
+
 
 	// Narysowanie czajnika
 	glFlush();
@@ -447,10 +767,7 @@ void RenderScene(void)
 
 }
 /*************************************************************************************/
-
 // Funkcja ustalaj¹ca stan renderowania
-
-
 
 void MyInit(void)
 {
@@ -461,20 +778,43 @@ void MyInit(void)
 }
 
 /*************************************************************************************/
-
-
 // Funkcja ma za zadanie utrzymanie sta³ych proporcji rysowanych 
 // w przypadku zmiany rozmiarów okna.
 // Parametry vertical i horizontal (wysokoœæ i szerokoœæ okna) s¹ 
 // przekazywane do funkcji za ka¿dym razem gdy zmieni siê rozmiar okna.
 
+void keys(unsigned char key, int x, int y)
+{
+	if (key == 'c') model = 1;
+	if (key == 'n') model = 2;
+	if (key == 'z') model = 3;
+	if (key == 'f') model = 4;
+	if (key == '+')
+		if (maxLevel<5)
+			++maxLevel;
+	if (key == '-')
+		if (maxLevel > 0)
+			--maxLevel;
+	if (key == 'q')
+		if (spin == 0)
+			spin = 1;
+		else
+			spin = 0;
+	if (key == ' ')
+		if (stop == 0)
+			stop = 1;
+		else
+			stop = 0;
 
+
+	RenderScene(); // przerysowanie obrazu sceny
+}
 
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
 {
 
-	pix2angleX = 360.0 / (float)horizontal;  // przeliczenie pikseli na stopnie
-	pix2angleY = 360.0 / (float)vertical;  // przeliczenie pikseli na stopnie
+	pix2angleX = 2 * M_PI / (float)horizontal;  // przeliczenie pikseli na stopnie
+	pix2angleY = 2 * M_PI / (float)vertical;  // przeliczenie pikseli na stopnie
 
 	glMatrixMode(GL_PROJECTION);
 	// Prze³¹czenie macierzy bie¿¹cej na macierz projekcji
@@ -503,23 +843,24 @@ void ChangeSize(GLsizei horizontal, GLsizei vertical)
 }
 
 /*************************************************************************************/
-
 // G³ówny punkt wejœcia programu. Program dzia³a w trybie konsoli
-
-
 
 void main(void)
 {
+	srand(time(NULL));
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-	glutInitWindowSize(300, 300);
+	glutInitWindowSize(500, 500);
 
-	glutCreateWindow("Rzutowanie perspektywiczne - 2 Zadanie");
+	glutCreateWindow("Trojkat sierpinskiego w 3-D z ruchomym obserwatorem");
 
-	GeneratingColors();
+	glutKeyboardFunc(keys);
+
+	glutIdleFunc(spinPyramid);
 
 	glutDisplayFunc(RenderScene);
+
 	// Okreœlenie, ¿e funkcja RenderScene bêdzie funkcj¹ zwrotn¹
 	// (callback function).  Bêdzie ona wywo³ywana za ka¿dym razem 
 	// gdy zajdzie potrzeba przerysowania okna

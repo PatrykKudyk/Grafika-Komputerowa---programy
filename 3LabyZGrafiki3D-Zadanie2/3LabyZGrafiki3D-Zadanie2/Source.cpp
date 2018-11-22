@@ -42,16 +42,22 @@ Point **tablica;		//dynamiczna tablica struktur punktowych
 
 Point **kolory;			//dynamiczna tablica kolorów
 
-GLfloat promien = 20.0;
+GLfloat promien = 10.0;
 
 float y = 1.0f;
 
 bool kierunek = true;  //true - dodawanie, false - odejmowanie
 
 GLfloat PHI = 0.0, THETA = 0.0;
+GLfloat PHI1 = 0.0, THETA1 = 0.0, PHI2 = 0.0, THETA2 = 0.0;
 //GLfloat cosPhi = 0.5, sinPhi = 0.5, cosTheta = 0.5, sinTheta = 0.5;
 
 static GLfloat viewer[] = { 0.1, 0.1, 10.0 };
+
+static GLfloat light1[] = { 0.0, 0.0, 10.0 };
+
+static GLfloat light2[] = { 10.0, 0.1, 0.1 };
+
 // inicjalizacja po³o¿enia obserwatora
 
 static GLfloat theta[] = { 0.0, 0.0 };   // k¹t obrotu obiektu
@@ -98,6 +104,7 @@ void Mouse(int btn, int state, int x, int y)
 	if (btn == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
 		statusP = 1;          // wciêniêty zosta³ lewy klawisz myszy
+		x_pos_old = x;         // przypisanie aktualnie odczytanej pozycji kursora 
 		y_pos_old = y;         // przypisanie aktualnie odczytanej pozycji kursora 
 	}
 	else
@@ -391,6 +398,20 @@ void viewerPlacing()
 	viewer[2] = promien*sin(THETA)*cos(PHI);
 }
 
+void light1Placing()
+{
+	light1[0] = promien*cos(THETA1)*cos(PHI1);
+	light1[1] = promien*sin(PHI1);
+	light1[2] = promien*sin(THETA1)*cos(PHI1);
+}
+
+void light2Placing()
+{
+	light2[0] = promien*cos(THETA2)*cos(PHI2);
+	light2[1] = promien*sin(PHI2);
+	light2[2] = promien*sin(THETA)*cos(PHI2);
+}
+
 void AnglesCounting()
 {
 	/*GLfloat temp1 = cosTheta, temp2 = sinTheta, temp3 = cosPhi, temp4 = sinPhi;
@@ -465,7 +486,27 @@ void AnglesCounting()
 
 }
 
+void AnglesCountingLight1()
+{
+	PHI1 += delta_y*pix2angleY;// / 40.0;
+	THETA1 += delta_x*pix2angleX;// / 40.0;
 
+	if (cosf(PHI1) >= 0.0f)
+		y = 1.0f;
+	else
+		y = -1.0f;
+}
+
+void AnglesCountingLight2()
+{
+	PHI2 += delta_y*pix2angleY;// / 40.0;
+	THETA2 += delta_x*pix2angleX;// / 40.0;
+
+	if (cosf(PHI2) >= 0.0f)
+		y = 1.0f;
+	else
+		y = -1.0f;
+}
 
 void RenderScene(void)
 {
@@ -479,7 +520,7 @@ void RenderScene(void)
 
 
 	//gluLookAt(5.0, 2.0, 10.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0);
-	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, y, 0.0);
+	gluLookAt(0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	// Zdefiniowanie po³o¿enia obserwatora
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
@@ -505,19 +546,18 @@ void RenderScene(void)
 
 	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
 	{
-		AnglesCounting();
+		AnglesCountingLight1();
 	}                                  // do ró¿nicy po³o¿eñ kursora myszy
 
 	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
 	{
-		GLfloat temp = promien;
-		if (promien >= 7.0 && promien <= 30.0)
-			promien += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
-		if (promien < 7.0 || promien > 30.0)
-			promien = temp;
+		AnglesCountingLight2();
 	}
 
-	viewerPlacing();
+	light1Placing();
+	light2Placing();
+
+	//viewerPlacing();
 
 	//glRotatef(theta[0], 0.0, 1.0, 0.0);  //obrót obiektu o nowy k¹t
 	//glRotatef(theta[1], 1.0, 0.0, 0.0);  //obrót obiektu o nowy k¹t
@@ -578,7 +618,7 @@ void MyInit(void)
 	// Definicja Ÿród³a œwiat³a
 
 
-	GLfloat light_position[] = { 0.0, 0.0, 10.0, 1.0 };
+	GLfloat light_position[] = { light1[0], light1[1], light1[2], 1.0 };
 	// po³o¿enie Ÿród³a
 
 
@@ -606,6 +646,37 @@ void MyInit(void)
 	// sk³adowa kwadratowa dq dla modelu zmian oœwietlenia w funkcji
 	// odleg³oœci od Ÿród³a
 
+
+	GLfloat light_position2[] = { light2[0], light2[1], light2[2], 1.0 };
+	// po³o¿enie Ÿród³a
+
+
+	GLfloat light_ambient2[] = { 0.1, 0.1, 0.1, 1.0 };
+	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a otoczenia
+	// Ia = [Iar,Iag,Iab]
+
+	GLfloat light_diffuse2[] = { 1.0, 1.0, 1.0, 1.0 };
+	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
+	// odbicie dyfuzyjne Id = [Idr,Idg,Idb]
+
+	GLfloat light_specular2[] = { 1.0, 1.0, 1.0, 1.0 };
+	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
+	// odbicie kierunkowe Is = [Isr,Isg,Isb]
+
+	GLfloat att_constant2 = { 1.0 };
+	// sk³adowa sta³a ds dla modelu zmian oœwietlenia w funkcji 
+	// odleg³oœci od Ÿród³a
+
+	GLfloat att_linear2 = { 0.05f };
+	// sk³adowa liniowa dl dla modelu zmian oœwietlenia w funkcji 
+	// odleg³oœci od Ÿród³a
+
+	GLfloat att_quadratic2 = { 0.001f };
+	// sk³adowa kwadratowa dq dla modelu zmian oœwietlenia w funkcji
+	// odleg³oœci od Ÿród³a
+
+	
+
 	/*************************************************************************************/
 	// Ustawienie parametrów materia³u i Ÿród³a œwiat³a
 
@@ -631,7 +702,17 @@ void MyInit(void)
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic);
 
+	
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient2);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse2);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular2);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position2);
 
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, att_constant2);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear2);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic2);
+
+	
 	/*************************************************************************************/
 	// Ustawienie opcji systemu oœwietlania sceny 
 
@@ -701,7 +782,7 @@ void main(void)
 
 	glutInitWindowSize(300, 300);
 
-	glutCreateWindow("Rzutowanie perspektywiczne - 2 Zadanie");
+	glutCreateWindow("Oswietlenie 3D - 2 Zadanie");
 
 	GeneratingColors();
 

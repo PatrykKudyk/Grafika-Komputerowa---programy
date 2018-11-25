@@ -42,7 +42,7 @@ Point **tablica;		//dynamiczna tablica struktur punktowych
 
 Point **kolory;			//dynamiczna tablica kolorów
 
-GLfloat promien = 10.0;
+GLfloat promien = 20.0;
 
 float y = 1.0f;
 
@@ -54,9 +54,9 @@ GLfloat PHI1 = 0.0, THETA1 = 0.0, PHI2 = 0.0, THETA2 = 0.0;
 
 static GLfloat viewer[] = { 0.1, 0.1, 10.0 };
 
-static GLfloat light1[] = { 0.0, 0.0, 10.0 };
+static GLfloat light1[] = { 0.0, 0.0, 10.0 , 1.0 };
 
-static GLfloat light2[] = { 10.0, 0.1, 0.1 };
+static GLfloat light2[] = { 10.0, 0.1, 0.1, 1.0 };
 
 // inicjalizacja po³o¿enia obserwatora
 
@@ -349,6 +349,11 @@ void Egg()
 
 }
 
+void LightsMaking()
+{
+	glLightfv(GL_LIGHT0, GL_POSITION, light1);
+	glLightfv(GL_LIGHT1, GL_POSITION, light2);
+}
 
 void Axes(void)
 {
@@ -409,75 +414,13 @@ void light2Placing()
 {
 	light2[0] = promien*cos(THETA2)*cos(PHI2);
 	light2[1] = promien*sin(PHI2);
-	light2[2] = promien*sin(THETA)*cos(PHI2);
+	light2[2] = promien*sin(THETA2)*cos(PHI2);
 }
 
 void AnglesCounting()
 {
-	/*GLfloat temp1 = cosTheta, temp2 = sinTheta, temp3 = cosPhi, temp4 = sinPhi;
-	cosTheta = viewer[0] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]);
-	if (cosTheta < -1 || cosTheta > 1)
-		cosTheta = temp1;
-	sinTheta = viewer[2] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]);
-	if (sinTheta < -1 || cosTheta > 1)
-		sinTheta = temp1;
-	//cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) /	(GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1]*viewer[1]);
-	cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) / promien;
-	if (cosPhi < -1 || cosTheta > 1)
-		cosPhi = temp1;
-//	sinPhi = viewer[1] / (GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1] * viewer[1]);
-	sinPhi = viewer[1] /promien;
-
-	if (sinPhi < -1 || cosTheta > 1)
-		sinPhi = temp1;*/
-
-		/*
-			GLfloat temp1 = PHI, temp2 = THETA;
-			if (PHI >= 0 && PHI <= M_PI)
-			PHI += delta_y*pix2angleY / 40.0;
-			if (PHI < 0 || PHI > 2 * M_PI)
-				PHI = temp1;
-			if (THETA >= 0 && THETA <= M_PI)
-			THETA += delta_x*pix2angleX / 40.0;
-			if (THETA < 0 || THETA > 2 * M_PI)
-				THETA = temp2;
-			*/
-
-			//GLfloat temp1 = PHI, temp2 = THETA;
-			//if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
-			//{
-					//PHI += delta_y*pix2angleY / 20.0;
-					//THETA += delta_x*pix2angleX / 20.0;
-			//}
-			//viewerPlacing();
-			//if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
-			//{
-			//	PHI = temp1;
-			//	THETA = temp2;
-			//}
-
-			/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
-				if (kierunek == true)
-					kierunek = false;
-				else
-					kierunek = true;
-
-			if(kierunek)
-			{
-				PHI += delta_y*pix2angleY / 40.0;
-				THETA += delta_x*pix2angleX / 40.0;
-			}
-			else
-			{
-				PHI = PHI * (-1.0);
-				THETA = THETA * (-1.0);
-			}
-			*/
-
-	PHI += delta_y*pix2angleY;// / 40.0;
-//	PHI = fmod(PHI, M_PI);
-	THETA += delta_x*pix2angleX;// / 40.0;
-//	THETA = fmod(THETA, M_PI);
+	PHI += delta_y*pix2angleY;
+	THETA += delta_x*pix2angleX;
 
 	if (cosf(PHI) >= 0.0f)
 		y = 1.0f;
@@ -488,8 +431,8 @@ void AnglesCounting()
 
 void AnglesCountingLight1()
 {
-	PHI1 += delta_y*pix2angleY;// / 40.0;
-	THETA1 += delta_x*pix2angleX;// / 40.0;
+	PHI1 += delta_y*pix2angleY;
+	THETA1 += delta_x*pix2angleX;
 
 	if (cosf(PHI1) >= 0.0f)
 		y = 1.0f;
@@ -499,8 +442,8 @@ void AnglesCountingLight1()
 
 void AnglesCountingLight2()
 {
-	PHI2 += delta_y*pix2angleY;// / 40.0;
-	THETA2 += delta_x*pix2angleX;// / 40.0;
+	PHI2 += delta_y*pix2angleY;
+	THETA2 += delta_x*pix2angleX;
 
 	if (cosf(PHI2) >= 0.0f)
 		y = 1.0f;
@@ -526,24 +469,6 @@ void RenderScene(void)
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
 
 
-/*
-	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
-	{
-		theta[0] += delta_x*pix2angleX;
-		theta[1] += delta_y*pix2angleY;
-
-	}                                  // do ró¿nicy po³o¿eñ kursora myszy
-
-	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
-	{
-		GLfloat temp = viewer[2];
-		if (viewer[2] >= 7.0 && viewer[2] <= 30.0)
-			viewer[2] += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
-		if (viewer[2] < 7.0 || viewer[2] > 30.0)
-			viewer[2] = temp;
-	}
-	*/
-
 	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
 	{
 		AnglesCountingLight1();
@@ -557,25 +482,9 @@ void RenderScene(void)
 	light1Placing();
 	light2Placing();
 
-	//viewerPlacing();
 
-	//glRotatef(theta[0], 0.0, 1.0, 0.0);  //obrót obiektu o nowy k¹t
-	//glRotatef(theta[1], 1.0, 0.0, 0.0);  //obrót obiektu o nowy k¹t
+	LightsMaking();
 
-	/*
-	glRotatef(theta1[0], 1.0, 0.0, 0.0);
-	glRotatef(theta1[1], 0.0, 1.0, 0.0);
-	glRotatef(theta1[2], 0.0, 0.0, 1.0);
-	*/
-
-	//glColor3f(1.0f, 1.0f, 1.0f);
-	// Ustawienie koloru rysowania na bia³y
-
-	//glutWireTeapot(3.0);
-
-
-	//glColor3f(1.0f, 1.0f, 1.0f);
-	//glutSolidTeapot(3.0f);
 	Egg();
 	// Narysowanie czajnika
 	glFlush();
@@ -590,47 +499,38 @@ void RenderScene(void)
 
 void MyInit(void)
 {
-	/************************************************************************************* /
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	// Kolor czyszc¹cy (wype³nienia okna) ustawiono na czarny
 
-	//  Definicja materia³u z jakiego zrobiony jest czajnik
-	//  i definicja Ÿród³a œwiat³a
-
-	/*************************************************************************************/
-
-
-	/*************************************************************************************/
-	// Definicja materia³u z jakiego zrobiony jest czajnik 
-
-	GLfloat mat_ambient[] = { 1.0, 1.0, 0.0, 1.0 };
+	// Definicja materia³u z jakiego zrobiony jest przedmiot
+	//-------------------------------------------------------
+	GLfloat mat_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
 	// wspó³czynniki ka =[kar,kag,kab] dla œwiat³a otoczenia
 
-	GLfloat mat_diffuse[] = { 1.0, 1.0, 0.0, 1.0 };
+	GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 	// wspó³czynniki kd =[kdr,kdg,kdb] œwiat³a rozproszonego
 
-	GLfloat mat_specular[] = { 1.0, 1.0, 0.0, 1.0 };
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	// wspó³czynniki ks =[ksr,ksg,ksb] dla œwiat³a odbitego                
 
-	GLfloat mat_shininess = { 20.0 };
+	GLfloat mat_shininess = { 100.0 };
 	// wspó³czynnik n opisuj¹cy po³ysk powierzchni
 
 
-	/*************************************************************************************/
 	// Definicja Ÿród³a œwiat³a
-
-
-	GLfloat light_position[] = { light1[0], light1[1], light1[2], 1.0 };
+	//-------------------------------------------------------
+	GLfloat light_position[2][4] = { { -10.0, -10.0, -10.0, 1.0 },{ -10.0, -10.0, -10.0, 1.0 } };
 	// po³o¿enie Ÿród³a
 
-
-	GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0 };
+	GLfloat light_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
 	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a otoczenia
 	// Ia = [Iar,Iag,Iab]
 
-	GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat light_diffuse[2][4] = { { 1.0, 0.0, 0.0, 0.0 },{ 0.0, 0.0, 1.0, 1.0 } };
 	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
 	// odbicie dyfuzyjne Id = [Idr,Idg,Idb]
 
-	GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat light_specular[2][4] = { { 1.0, 1.0, 0.0, 1.0 },{ 0.7, 0.7, 1.0, 1.0 } };
 	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
 	// odbicie kierunkowe Is = [Isr,Isg,Isb]
 
@@ -638,7 +538,7 @@ void MyInit(void)
 	// sk³adowa sta³a ds dla modelu zmian oœwietlenia w funkcji 
 	// odleg³oœci od Ÿród³a
 
-	GLfloat att_linear = { 0.05f };
+	GLfloat att_linear = { 0.001f };
 	// sk³adowa liniowa dl dla modelu zmian oœwietlenia w funkcji 
 	// odleg³oœci od Ÿród³a
 
@@ -646,86 +546,42 @@ void MyInit(void)
 	// sk³adowa kwadratowa dq dla modelu zmian oœwietlenia w funkcji
 	// odleg³oœci od Ÿród³a
 
-
-	GLfloat light_position2[] = { light2[0], light2[1], light2[2], 1.0 };
-	// po³o¿enie Ÿród³a
-
-
-	GLfloat light_ambient2[] = { 0.1, 0.1, 0.1, 1.0 };
-	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a otoczenia
-	// Ia = [Iar,Iag,Iab]
-
-	GLfloat light_diffuse2[] = { 1.0, 1.0, 1.0, 1.0 };
-	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
-	// odbicie dyfuzyjne Id = [Idr,Idg,Idb]
-
-	GLfloat light_specular2[] = { 1.0, 1.0, 1.0, 1.0 };
-	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
-	// odbicie kierunkowe Is = [Isr,Isg,Isb]
-
-	GLfloat att_constant2 = { 1.0 };
-	// sk³adowa sta³a ds dla modelu zmian oœwietlenia w funkcji 
-	// odleg³oœci od Ÿród³a
-
-	GLfloat att_linear2 = { 0.05f };
-	// sk³adowa liniowa dl dla modelu zmian oœwietlenia w funkcji 
-	// odleg³oœci od Ÿród³a
-
-	GLfloat att_quadratic2 = { 0.001f };
-	// sk³adowa kwadratowa dq dla modelu zmian oœwietlenia w funkcji
-	// odleg³oœci od Ÿród³a
-
-	
-
-	/*************************************************************************************/
-	// Ustawienie parametrów materia³u i Ÿród³a œwiat³a
-
-	/*************************************************************************************/
-	// Ustawienie patrametrów materia³u
-
-
+	// Ustawienie patrametrów materia³u 
+	//-------------------------------------------------------
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 	glMaterialf(GL_FRONT, GL_SHININESS, mat_shininess);
 
-
-	/*************************************************************************************/
-	// Ustawienie parametrów Ÿród³a
-
+	// Ustawienie parametrów Ÿród³a œwiat³a
+	//-------------------------------------------------------
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse[0]);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular[0]);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position[0]);
 
 	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, att_constant);
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic);
 
-	
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient2);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse2);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular2);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position2);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse[1]);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular[1]);
+	glLightfv(GL_LIGHT1, GL_POSITION, light_position[1]);
 
-	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, att_constant2);
-	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear2);
-	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic2);
+	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, att_constant);
+	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, att_linear);
+	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, att_quadratic);
 
-	
-	/*************************************************************************************/
 	// Ustawienie opcji systemu oœwietlania sceny 
-
+	//-------------------------------------------------------
 	glShadeModel(GL_SMOOTH); // w³aczenie ³agodnego cieniowania
 	glEnable(GL_LIGHTING);   // w³aczenie systemu oœwietlenia sceny 
 	glEnable(GL_LIGHT0);     // w³¹czenie Ÿród³a o numerze 0
+	glEnable(GL_LIGHT1);     // w³¹czenie Ÿród³a o numerze 1
 	glEnable(GL_DEPTH_TEST); // w³¹czenie mechanizmu z-bufora 
-
-							 /*************************************************************************************/
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	// Kolor czyszcz¹cy (wype³nienia okna) ustawiono na czarny
-
 }
+
 
 /*************************************************************************************/
 

@@ -10,7 +10,7 @@
 #include <gl/glut.h>
 #include <ctime>
 #include <iostream>
-
+//using namespace std;
 /*************************************************************************************/
 typedef float point3[3];
 // Funkcja rysuj¹ca osie uk³adu wspó³rzêdnych
@@ -34,7 +34,7 @@ int stop = 0;
 
 static float startSideLength = 10.0; //dlugosc boku pierwszego ostroslupa
 
-Point startPoint = { { -5.0 } ,{ -2.5 },{ -5.0 } };
+Point startPoint = { { -5.0f } ,{ -2.5f },{ -5.0f } };
 //Point startPoint = { {((-N)/2.0)}, {(-sqrt(startSideLength*(startSideLength / 2.0)))} , {((-N)/2.0)}};
 
 int model = 1;  // 1- czerwony, 2- niebieski, 3 - zielony, 4 - fioletowy
@@ -79,13 +79,42 @@ void Axes(void)
 
 void RysowanieCzerwony(Point A, float sideLength)
 {
+	/*cout << "Punkt A = {" << A.x << " ; " << A.y << " ; " << A.z << "}" << endl;
+	cout << "Punkt B = {" << A.x + sideLength << " ; " << A.y << " ; " << A.z << "}" << endl;
+	cout << "Punkt C = {" << A.x + sideLength << " ; " << A.y << " ; " << A.z + sideLength << "}" << endl;
+	cout << "Punkt D = {" << A.x << " ; " << A.y << " ; " << A.z + sideLength << "}" << endl;
+	cout << "Punkt E = {" << A.x + (sideLength / 2.0) << " ; " << A.y + sqrt(sideLength*(sideLength / 2.0)) << " ; " << A.z + (sideLength / 2.0) << "}" << endl;
+	cin.get();
+	cin.get();*/
+	Point wektor1 = { 0.0f, 0.0f, sideLength }, wektor2 = { sideLength, 0.0f, 0.0f };
+	//Startowe wektory to AD i AB
+	//wektor1 = AD, wektor2 = AB
+	Point wektorNormalny;
+	wektorNormalny.x = -1 * (wektor1.y*wektor2.z - wektor1.z*wektor2.y);
+	wektorNormalny.y = -1 * (wektor1.z*wektor2.x - wektor1.x*wektor2.z);
+	wektorNormalny.z = -1 * (wektor1.x*wektor2.y - wektor1.y*wektor2.x);
+	//wektor normalny, na poczatku ustawiony na podstawe;
+	float pierwiastek = sqrtf(wektorNormalny.x*wektorNormalny.x + wektorNormalny.y*wektorNormalny.y + wektorNormalny.z*wektorNormalny.z);
+
+	wektorNormalny.x = wektorNormalny.x / pierwiastek;
+	wektorNormalny.y = wektorNormalny.y / pierwiastek;
+	wektorNormalny.z = wektorNormalny.z / pierwiastek;
+
+
 	glBegin(GL_POLYGON);
 	glColor3f(1.0f, 0.0f, 0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x, A.y, A.z);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + sideLength, A.y, A.z);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glEnd();
+
+
+
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.9f, 0.0f, 0.0f);
 	glVertex3f(A.x, A.y, A.z);
@@ -431,15 +460,15 @@ void spinPyramid()
 		if (spin == 0)
 		{
 			theta[0] += wartosc;
-			if (theta[0] < -30.0)  wartosc = 0.015;
-			if (theta[0] > 0.0) wartosc = -0.015;
+			if (theta[0] < -40.0)  wartosc = 0.015;
+			if (theta[0] > 40.0) wartosc = -0.015;
 			theta[1] -= 0.25;
 		}
 		else
 		{
 			theta[0] += wartosc;
-			if (theta[0] < -30.0)  wartosc = 0.015;
-			if (theta[0] > 0.0) wartosc = -0.015;
+			if (theta[0] < -40.0)  wartosc = 0.015;
+			if (theta[0] > 40.0) wartosc = -0.015;
 			theta[1] += 0.25;
 		}
 		glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
@@ -561,8 +590,6 @@ void MyInit(void)
 	glEnable(GL_LIGHT1);     // w³¹czenie Ÿród³a o numerze 1
 	glEnable(GL_DEPTH_TEST); // w³¹czenie mechanizmu z-bufora 
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	// Kolor czyszc¹cy (wype³nienia okna) ustawiono na czarny
 
 }
 
@@ -639,8 +666,6 @@ void ChangeSize(GLsizei horizontal, GLsizei vertical)
 /*************************************************************************************/
 
 // G³ówny punkt wejœcia programu. Program dzia³a w trybie konsoli
-
-
 
 void main(void)
 {

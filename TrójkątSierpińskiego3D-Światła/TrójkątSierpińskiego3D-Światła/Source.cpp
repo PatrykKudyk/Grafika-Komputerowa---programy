@@ -232,6 +232,21 @@ void Axes(void)
 
 }
 
+Point ObliczenieWektoraNormalnego( Point wektor1, Point wektor2)
+{
+	Point wektorNormalny;
+	wektorNormalny.x = wektor1.y*wektor2.z - wektor1.z*wektor2.y;
+	wektorNormalny.y = wektor1.z*wektor2.x - wektor1.x*wektor2.z;
+	wektorNormalny.z = wektor1.x*wektor2.y - wektor1.y*wektor2.x;
+	//wektor normalny, na poczatku ustawiony na podstawe;
+	float pierwiastek = sqrtf(wektorNormalny.x*wektorNormalny.x + wektorNormalny.y*wektorNormalny.y + wektorNormalny.z*wektorNormalny.z);
+
+	wektorNormalny.x = wektorNormalny.x / pierwiastek;
+	wektorNormalny.y = wektorNormalny.y / pierwiastek;
+	wektorNormalny.z = wektorNormalny.z / pierwiastek;
+
+	return wektorNormalny;
+}
 /*************************************************************************************/
 
 void RysowanieCzerwony(Point A, float sideLength)
@@ -240,17 +255,11 @@ void RysowanieCzerwony(Point A, float sideLength)
 	Point wektor1 = { 0.0f, 0.0f, sideLength }, wektor2 = { sideLength, 0.0f, 0.0f };
 	//Startowe wektory to AD i AB
 	//wektor1 = AD, wektor2 = AB
-	Point wektorNormalny;
-	wektorNormalny.x = -1 * (wektor1.y*wektor2.z - wektor1.z*wektor2.y);
-	wektorNormalny.y = -1 * (wektor1.z*wektor2.x - wektor1.x*wektor2.z);
-	wektorNormalny.z = -1 * (wektor1.x*wektor2.y - wektor1.y*wektor2.x);
-	//wektor normalny, na poczatku ustawiony na podstawe;
-	float pierwiastek = sqrtf(wektorNormalny.x*wektorNormalny.x + wektorNormalny.y*wektorNormalny.y + wektorNormalny.z*wektorNormalny.z);
-
-	wektorNormalny.x = wektorNormalny.x / pierwiastek;
-	wektorNormalny.y = wektorNormalny.y / pierwiastek;
-	wektorNormalny.z = wektorNormalny.z / pierwiastek;
-
+	Point wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
+	wektorNormalny.x = -1 * (wektorNormalny.x);
+	wektorNormalny.y = -1 * (wektorNormalny.y);
+	wektorNormalny.z = -1 * (wektorNormalny.z);
+	
 
 	glBegin(GL_POLYGON);
 	glColor3f(1.0f, 0.0f, 0.0f);
@@ -264,29 +273,75 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glEnd();
 
+	wektor1.x = sideLength / 2.0;
+	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
+	wektor1.z = sideLength / 2.0;
+	wektor2.x = sideLength;
+	wektor2.y = 0.0f;
+	wektor2.z = 0.0f;
+	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.9f, 0.0f, 0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x, A.y, A.z);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + sideLength, A.y, A.z);
 	glEnd();
+
+	wektor1.x = (sideLength / 2.0 - sideLength);
+	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
+	wektor1.z = (sideLength / 2.0);
+	wektor2.x = 0.0f;
+	wektor2.y = 0.0f;
+	wektor2.z = sideLength;
+	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
+
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.8f, 0.0f, 0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + sideLength, A.y, A.z);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glEnd();
+
+	wektor1.x = sideLength / 2.0 - sideLength;
+	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
+	wektor1.z = sideLength / 2.0 - sideLength;
+	wektor2.x = -1 * sideLength;
+	wektor2.y = 0.0f;
+	wektor2.z = 0.0f;
+	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
+
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.7f, 0.0f, 0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glEnd();
+
+	wektor1.x = sideLength / 2.0;
+	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
+	wektor1.z = sideLength / 2.0 - sideLength;
+	wektor2.x = 0.0f;
+	wektor2.y = 0.0f;
+	wektor2.z = -1 * sideLength;
+	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
+
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.6f, 0.0f, 0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x, A.y, A.z + sideLength);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
 	glVertex3f(A.x, A.y, A.z);
 	glEnd();
 

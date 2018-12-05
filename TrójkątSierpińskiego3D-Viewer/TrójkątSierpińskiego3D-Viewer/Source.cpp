@@ -52,7 +52,6 @@ Point **kolory;			//dynamiczna tablica kolorów
 
 GLfloat promien = 20.0;
 
-bool kierunek = true;  //true - dodawanie, false - odejmowanie
 
 GLfloat PHI = 0.0, THETA = 0.0;
 //GLfloat cosPhi = 0.5, sinPhi = 0.5, cosTheta = 0.5, sinTheta = 0.5;

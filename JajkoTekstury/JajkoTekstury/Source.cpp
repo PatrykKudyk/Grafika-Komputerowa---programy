@@ -11,6 +11,7 @@
 #include <cmath>
 #include <ctime>
 #include <iostream>
+#pragma warning (disable : 4996)
 
 using namespace std;
 
@@ -36,7 +37,7 @@ struct Point
 	float nz;
 };
 
-static int N = 40;			//wielkosc tablicy
+static int N = 60;			//wielkosc tablicy
 
 Point **tablica;		//dynamiczna tablica struktur punktowych
 
@@ -80,6 +81,145 @@ static int delta_y = 0;        // ró¿nica pomiêdzy pozycj¹ bie¿¹c¹
 
 							   /*************************************************************************************/
 							   // Funkcja "bada" stan myszy i ustawia wartoœci odpowiednich zmiennych globalnych
+
+GLbyte *LoadTGAImage(const char *FileName, GLint *ImWidth, GLint *ImHeight, GLint *ImComponents, GLenum *ImFormat)
+{
+
+	/*************************************************************************************/
+
+	// Struktura dla nag³ówka pliku  TGA
+
+
+#pragma pack(1)            
+	typedef struct
+	{
+		GLbyte    idlength;
+		GLbyte    colormaptype;
+		GLbyte    datatypecode;
+		unsigned short    colormapstart;
+		unsigned short    colormaplength;
+		unsigned char     colormapdepth;
+		unsigned short    x_orgin;
+		unsigned short    y_orgin;
+		unsigned short    width;
+		unsigned short    height;
+		GLbyte    bitsperpixel;
+		GLbyte    descriptor;
+	}TGAHEADER;
+#pragma pack(8)
+
+	FILE *pFile;
+	TGAHEADER tgaHeader;
+	unsigned long lImageSize;
+	short sDepth;
+	GLbyte    *pbitsperpixel = NULL;
+
+
+	/*************************************************************************************/
+
+	// Wartoœci domyœlne zwracane w przypadku b³êdu 
+
+	*ImWidth = 0;
+	*ImHeight = 0;
+	*ImFormat = GL_BGR_EXT;
+	*ImComponents = GL_RGB8;
+
+	pFile = fopen(FileName, "rb");
+	if (pFile == NULL)
+		return NULL;
+
+	/*************************************************************************************/
+	// Przeczytanie nag³ówka pliku 
+
+
+	fread(&tgaHeader, sizeof(TGAHEADER), 1, pFile);
+
+
+	/*************************************************************************************/
+
+	// Odczytanie szerokoœci, wysokoœci i g³êbi obrazu 
+
+	*ImWidth = tgaHeader.width;
+	*ImHeight = tgaHeader.height;
+	sDepth = tgaHeader.bitsperpixel / 8;
+
+
+	/*************************************************************************************/
+	// Sprawdzenie, czy g³êbia spe³nia za³o¿one warunki (8, 24, lub 32 bity) 
+
+	if (tgaHeader.bitsperpixel != 8 && tgaHeader.bitsperpixel != 24 && tgaHeader.bitsperpixel != 32)
+		return NULL;
+
+	/*************************************************************************************/
+
+	// Obliczenie rozmiaru bufora w pamiêci
+
+
+	lImageSize = tgaHeader.width * tgaHeader.height * sDepth;
+
+
+	/*************************************************************************************/
+
+	// Alokacja pamiêci dla danych obrazu
+
+
+	pbitsperpixel = (GLbyte*)malloc(lImageSize * sizeof(GLbyte));
+
+	if (pbitsperpixel == NULL)
+		return NULL;
+
+	if (fread(pbitsperpixel, lImageSize, 1, pFile) != 1)
+	{
+		free(pbitsperpixel);
+		return NULL;
+	}
+
+
+	/*************************************************************************************/
+
+	// Ustawienie formatu OpenGL
+
+
+	switch (sDepth)
+
+	{
+
+	case 3:
+
+		*ImFormat = GL_BGR_EXT;
+
+		*ImComponents = GL_RGB8;
+
+		break;
+
+	case 4:
+
+		*ImFormat = GL_BGRA_EXT;
+
+		*ImComponents = GL_RGBA8;
+
+		break;
+
+	case 1:
+
+		*ImFormat = GL_LUMINANCE;
+
+		*ImComponents = GL_LUMINANCE8;
+
+		break;
+
+	};
+
+
+
+	fclose(pFile);
+
+
+
+	return pbitsperpixel;
+
+}
+
 
 void Mouse(int btn, int state, int x, int y)
 {
@@ -151,28 +291,34 @@ void DrawEggTriangle()
 					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
+					glTexCoord2f((float)((float)i/(float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
 					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
+					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
 					//glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i][j + 1].nx, tablica[i][j + 1].ny, tablica[i][j + 1].nz);
+					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
 					glEnd();
 					glBegin(GL_TRIANGLES);
 					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
+					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
 					//glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i + 1][j].nx, tablica[i + 1][j].ny, tablica[i + 1][j].nz);
+					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
 					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
+					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
 					glEnd();
 				}
@@ -183,14 +329,17 @@ void DrawEggTriangle()
 				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
+				glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
 				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
+				glTexCoord2f(0.0f, 0.0f);
 				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
 				//glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[i][0].nx, tablica[i][0].ny, tablica[i][0].nz);
+				glTexCoord2f((float)((float)i / (float)N), 0.0f);
 				glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);
 				glEnd();
 
@@ -198,14 +347,17 @@ void DrawEggTriangle()
 				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
+				glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
 				//glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[0][j].nx, tablica[0][j].ny, tablica[0][j].nz);
+				glTexCoord2f(0.0f, (float)((float)j / (float)N));
 				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
 				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
+				glTexCoord2f(0.0f, 0.0f);
 				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
 				glEnd();
 			}
@@ -279,7 +431,7 @@ void Egg()
 			tablica[i][j].yv = 0.0;
 			tablica[i][j].zu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*sinf((float)M_PI*v);
 			tablica[i][j].zv = (-1 * (float)M_PI)*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*cosf((float)M_PI*v);
-
+			
 
 
 			tablica[i][j].nx = tablica[i][j].yu*tablica[i][j].zv - tablica[i][j].zu*tablica[i][j].yv;
@@ -341,7 +493,6 @@ void Egg()
 
 
 }
-
 
 void Axes(void)
 {
@@ -465,8 +616,6 @@ void AnglesCounting()
 
 }
 
-
-
 void RenderScene(void)
 {
 
@@ -550,6 +699,69 @@ void RenderScene(void)
 
 void MyInit(void)
 {
+	/*************************************************************************************/
+
+	// Zmienne dla obrazu tekstury
+
+
+
+	GLbyte *pBytes;
+	GLint ImWidth, ImHeight, ImComponents;
+	GLenum ImFormat;
+
+
+	// ..................................       
+	//       Pozosta³a czêœæ funkcji MyInit()
+
+	// ..................................
+
+	/*************************************************************************************/
+
+	// Teksturowanie bêdzie prowadzone tyko po jednej stronie œciany 
+
+//	glEnable(GL_CULL_FACE);
+
+
+	/*************************************************************************************/
+
+	//  Przeczytanie obrazu tekstury z pliku o nazwie tekstura.tga
+
+	pBytes = LoadTGAImage("tekstura.tga", &ImWidth, &ImHeight, &ImComponents, &ImFormat);
+
+
+	/*************************************************************************************/
+
+	// Zdefiniowanie tekstury 2-D 
+
+	glTexImage2D(GL_TEXTURE_2D, 0, ImComponents, ImWidth, ImHeight, 0, ImFormat, GL_UNSIGNED_BYTE, pBytes);
+
+	/*************************************************************************************/
+
+	// Zwolnienie pamiêci
+
+	free(pBytes);
+
+
+	/*************************************************************************************/
+
+	// W³¹czenie mechanizmu teksturowania
+
+	glEnable(GL_TEXTURE_2D);
+
+	/*************************************************************************************/
+
+	// Ustalenie trybu teksturowania
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	/*************************************************************************************/
+
+	// Okreœlenie sposobu nak³adania tekstur
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	
 	/************************************************************************************* /
 
 	//  Definicja materia³u z jakiego zrobiony jest czajnik

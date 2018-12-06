@@ -17,14 +17,24 @@
 
 typedef float point3[3];
 
-//static GLfloat theta1[] = { 0.0, 0.0, 0.0 }; // trzy k¹ty obrotu
-
 struct Point
 {
 	float x;
 	float y;
 	float z;
+	float xu;
+	float xv;
+	float yu;
+	float yv;
+	float zu;
+	float zv;
+	float nx;
+	float ny;
+	float nz;
 };
+
+//static GLfloat theta1[] = { 0.0, 0.0, 0.0 }; // trzy k¹ty obrotu
+
 
 static GLfloat theta[] = { 0.0, 0.0, 0.0 }; // trzy k¹ty obrotu
 
@@ -302,19 +312,31 @@ void DrawEggTriangle()
 				if (j <= (N - 1))
 				{
 					glBegin(GL_TRIANGLES);
-					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+					glColor3f(1.0, 1.0, 0.0);
+					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
+					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
+					glColor3f(1.0, 1.0, 0.0);
+					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
 					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
-					glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
+					//glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
+					glColor3f(1.0, 1.0, 0.0);
+					glNormal3f(tablica[i][j + 1].nx, tablica[i][j + 1].ny, tablica[i][j + 1].nz);
 					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
 					glEnd();
 					glBegin(GL_TRIANGLES);
-					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+					glColor3f(1.0, 1.0, 0.0);
+					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
+					//glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
+					glColor3f(1.0, 1.0, 0.0);
+					glNormal3f(tablica[i + 1][j].nx, tablica[i + 1][j].ny, tablica[i + 1][j].nz);
 					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
-					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
+					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
+					glColor3f(1.0, 1.0, 0.0);
+					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
 					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
 					glEnd();
 				}
@@ -322,25 +344,38 @@ void DrawEggTriangle()
 			else
 			{
 				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+				glColor3f(1.0, 1.0, 0.0);
+				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
+				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
+				glColor3f(1.0, 1.0, 0.0);
+				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
 				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
-				glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
+				//glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
+				glColor3f(1.0, 1.0, 0.0);
+				glNormal3f(tablica[i][0].nx, tablica[i][0].ny, tablica[i][0].nz);
 				glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);
 				glEnd();
 
 				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
+				glColor3f(1.0, 1.0, 0.0);
+				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
+				//glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
+				glColor3f(1.0, 1.0, 0.0);
+				glNormal3f(tablica[0][j].nx, tablica[0][j].ny, tablica[0][j].nz);
 				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
-				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
+				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
+				glColor3f(1.0, 1.0, 0.0);
+				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
 				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
 				glEnd();
 			}
 		}
 }
+
 
 void Axes(void)
 {
@@ -408,14 +443,18 @@ void RysowanieCzerwony(Point A, float sideLength)
 
 
 	glBegin(GL_POLYGON);
-	glColor3f(1.0f, 0.0f, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(A.x, A.y, A.z);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(A.x + sideLength, A.y, A.z);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glEnd();
 
@@ -428,12 +467,15 @@ void RysowanieCzerwony(Point A, float sideLength)
 	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
 
 	glBegin(GL_TRIANGLES);
-	glColor3f(0.9f, 0.0f, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(A.x, A.y, A.z);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.5f, 0.8f);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(A.x + sideLength, A.y, A.z);
 	glEnd();
 
@@ -446,12 +488,15 @@ void RysowanieCzerwony(Point A, float sideLength)
 	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
 
 	glBegin(GL_TRIANGLES);
-	glColor3f(0.8f, 0.0f, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(A.x + sideLength, A.y, A.z);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.5f, 0.8f);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glEnd();
 
@@ -464,12 +509,15 @@ void RysowanieCzerwony(Point A, float sideLength)
 	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
 
 	glBegin(GL_TRIANGLES);
-	glColor3f(0.7f, 0.0f, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.5f, 0.8f);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glEnd();
 
@@ -482,16 +530,19 @@ void RysowanieCzerwony(Point A, float sideLength)
 	wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
 
 	glBegin(GL_TRIANGLES);
-	glColor3f(0.6f, 0.0f, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.5f, 0.8f);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
 	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(A.x, A.y, A.z);
 	glEnd();
 
-
+	/*
 	glBegin(GL_LINE_STRIP);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glVertex3f(A.x, A.y, A.z);
@@ -520,7 +571,7 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
 	glEnd();
-
+	*/
 }
 
 void RysowanieZielony(Point A, float sideLength)
@@ -817,6 +868,136 @@ void drawTriangle()
 // Funkcja okreœlaj¹ca co ma byæ rysowane (zawsze wywo³ywana, gdy trzeba 
 // przerysowaæ scenê)
 
+void GeneratingColors()
+{
+	kolory = new Point*[N + 1];
+	for (int i = 0; i <= N; i++)
+		kolory[i] = new Point[N + 1];
+
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
+		{
+
+			//	else {
+			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
+			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
+			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
+			//	}
+		}
+
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
+		{
+			if (j == N - 1)
+			{
+				kolory[i][j].x = kolory[i][0].x;
+				kolory[i][j].y = kolory[i][0].y;
+				kolory[i][j].z = kolory[i][0].z;
+			}
+		}
+
+
+
+	/*
+	for (int i = 0; i <= N; i++)
+	{
+	for(int j = 0 ; j <= N; j++)
+	std::cout << "X = " << kolory[i][j].x << "\t";
+	std::cout << std::endl;
+	for (int j = 0; j <= N; j++)
+	std::cout << "Y = " << kolory[i][j].y << "\t";
+	std::cout << std::endl;
+	for (int j = 0; j <= N; j++)
+	std::cout << "Z = " << kolory[i][j].z << "\t";
+	std::cout << std::endl << std::endl;
+	}
+	std::cin.get();
+	std::cin.get();*/
+	tablica = new Point*[N + 1];
+	for (int i = 0; i <= N; i++)
+		tablica[i] = new Point[N + 1];
+
+}
+
+void Egg()
+{
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
+		{
+			float u = (float)i / (float)N;
+			float v = (float)j / (float)N;
+			tablica[i][j].x = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*cosf((float)M_PI*v));
+			tablica[i][j].y = (160 * pow(u, 4) - 320 * pow(u, 3) + 160 * u*u);
+			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sinf((float)M_PI*v));
+			tablica[i][j].xu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*cosf((float)M_PI*v);
+			tablica[i][j].xv = (float)M_PI*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*sinf(M_PI*v);
+			tablica[i][j].yu = (640 * pow(u, 3) - 960 * u*u + 320 * u);
+			tablica[i][j].yv = 0.0;
+			tablica[i][j].zu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*sinf((float)M_PI*v);
+			tablica[i][j].zv = (-1 * (float)M_PI)*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*cosf((float)M_PI*v);
+
+
+
+			tablica[i][j].nx = tablica[i][j].yu*tablica[i][j].zv - tablica[i][j].zu*tablica[i][j].yv;
+			tablica[i][j].ny = tablica[i][j].zu*tablica[i][j].xv - tablica[i][j].xu*tablica[i][j].zv;
+			tablica[i][j].nz = tablica[i][j].xu*tablica[i][j].yv - tablica[i][j].yu*tablica[i][j].xv;
+
+			if (i > N / 2)
+			{
+				tablica[i][j].nx = -1.0*tablica[i][j].nx;
+				tablica[i][j].ny = -1.0*tablica[i][j].ny;
+				tablica[i][j].nz = -1.0*tablica[i][j].nz;
+			}
+
+
+			if (i == N / 2)
+			{
+				tablica[i][j].nx = 0.0;
+				tablica[i][j].ny = 1.0;
+				tablica[i][j].nz = 0.0;
+			}
+
+			if (i == 0 || i == N)
+			{
+				tablica[i][j].nx = 0.0;
+				tablica[i][j].ny = -1.0;
+				tablica[i][j].nz = 0.0;
+			}
+
+
+
+
+			//	cout << "Przed: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
+			float pierwiastek = sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
+
+			//	if ()
+			//	{
+			tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
+			tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
+			tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
+			//	cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
+			//	}
+
+			//cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz) << endl;
+		}
+
+	/*for(int i = 0; i <= N; i++)
+	{
+	for (int j = 0; j <= N; j++)
+	std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
+
+	std::cout << std::endl;
+	}
+
+	std::cin.get();
+	std::cin.get();
+	*/
+
+	DrawEggTriangle();
+
+
+}
+
 void viewerPlacing()
 {
 
@@ -878,7 +1059,8 @@ void RenderScene(void)
 
 
 	//DrawSierpinski(startPoint, startSideLength, 0);
-	drawTriangle();
+	//drawTriangle();
+	Egg();
 
 	// Narysowanie czajnika
 	glFlush();
@@ -1123,11 +1305,13 @@ void main(void)
 {
 	srand(time(NULL));
 
+	GeneratingColors();
+
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
 	glutInitWindowSize(500, 500);
 
-	glutCreateWindow("Trojkat sierpinskiego w 3-D z ruchomym obserwatorem");
+	glutCreateWindow("Teksturowanie z Labek + PracaDomowa");
 
 	glutKeyboardFunc(keys);
 

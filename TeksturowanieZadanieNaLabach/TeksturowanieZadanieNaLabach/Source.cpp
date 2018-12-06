@@ -793,14 +793,24 @@ void spinPyramid()
 
 void drawTriangle()
 {
+	Point wektor1 = { 10.0f,0.0f,0.0f }, wektor2 = { 5.0f,7.5f,0.0f };
+	//Startowe wektory to AD i AB
+	//wektor1 = AD, wektor2 = AB
+	Point wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
+
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.0f, 0.0f, 0.0f);
-	//glNormal3f();
-	glVertex3f(-5.0f,-2.5f,0.0f);
-	//glNormal3f();
-	glVertex3f(5.0f,-2.5f,0.0f);
-	//glNormal3f();
-	glVertex3f(0.0f,5.0f,0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-5.0f, -2.5f, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(5.0f, -2.5f, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glNormal3f(wektorNormalny.x, wektorNormalny.y, wektorNormalny.z);
+	glTexCoord2f(0.5f, 1.0f);
+	glVertex3f(0.0f, 5.0f, 0.0f);
 	glEnd();
 }
 
@@ -948,8 +958,17 @@ void MyInit(void)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	// Kolor czyszc¹cy (wype³nienia okna) ustawiono na czarny
 
-	// Definicja materia³u z jakiego zrobiony jest przedmiot
-	//-------------------------------------------------------
+	/*************************************************************************************/
+
+	//  Definicja materia³u z jakiego zrobiony jest czajnik 
+	//  i definicja Ÿród³a œwiat³a
+
+	/*************************************************************************************/
+
+
+	/*************************************************************************************/
+	// Definicja materia³u z jakiego zrobiony jest czajnik 
+
 	GLfloat mat_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
 	// wspó³czynniki ka =[kar,kag,kab] dla œwiat³a otoczenia
 
@@ -959,24 +978,27 @@ void MyInit(void)
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	// wspó³czynniki ks =[ksr,ksg,ksb] dla œwiat³a odbitego                
 
-	GLfloat mat_shininess = { 100.0 };
+	GLfloat mat_shininess = { 20.0 };
 	// wspó³czynnik n opisuj¹cy po³ysk powierzchni
 
 
+	/*************************************************************************************/
 	// Definicja Ÿród³a œwiat³a
-	//-------------------------------------------------------
-	GLfloat light_position[] = { 0.0, 10.0, 5.0, 1.0 };
+
+
+	GLfloat light_position[] = { 0.0, 0.0, 10.0, 1.0 };
 	// po³o¿enie Ÿród³a
 
-	GLfloat light_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+
+	GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0 };
 	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a otoczenia
 	// Ia = [Iar,Iag,Iab]
 
-	GLfloat light_diffuse[] = { 1.0, 0.0, 0.0, 0.0 };
+	GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
 	// odbicie dyfuzyjne Id = [Idr,Idg,Idb]
 
-	GLfloat light_specular[] = { 1.0, 1.0, 0.0, 1.0 };
+	GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
 	// odbicie kierunkowe Is = [Isr,Isg,Isb]
 
@@ -984,7 +1006,7 @@ void MyInit(void)
 	// sk³adowa sta³a ds dla modelu zmian oœwietlenia w funkcji 
 	// odleg³oœci od Ÿród³a
 
-	GLfloat att_linear = { 0.001f };
+	GLfloat att_linear = { 0.05f };
 	// sk³adowa liniowa dl dla modelu zmian oœwietlenia w funkcji 
 	// odleg³oœci od Ÿród³a
 
@@ -992,15 +1014,22 @@ void MyInit(void)
 	// sk³adowa kwadratowa dq dla modelu zmian oœwietlenia w funkcji
 	// odleg³oœci od Ÿród³a
 
-	// Ustawienie patrametrów materia³u 
-	//-------------------------------------------------------
+	/*************************************************************************************/
+	// Ustawienie parametrów materia³u i Ÿród³a œwiat³a
+
+	/*************************************************************************************/
+	// Ustawienie patrametrów materia³u
+
+
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 	glMaterialf(GL_FRONT, GL_SHININESS, mat_shininess);
 
-	// Ustawienie parametrów Ÿród³a œwiat³a
-	//-------------------------------------------------------
+
+	/*************************************************************************************/
+	// Ustawienie parametrów Ÿród³a
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
@@ -1010,14 +1039,16 @@ void MyInit(void)
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic);
 
+
+	/*************************************************************************************/
 	// Ustawienie opcji systemu oœwietlania sceny 
-	//-------------------------------------------------------
+
 	glShadeModel(GL_SMOOTH); // w³aczenie ³agodnego cieniowania
 	glEnable(GL_LIGHTING);   // w³aczenie systemu oœwietlenia sceny 
 	glEnable(GL_LIGHT0);     // w³¹czenie Ÿród³a o numerze 0
-	glEnable(GL_LIGHT1);     // w³¹czenie Ÿród³a o numerze 1
 	glEnable(GL_DEPTH_TEST); // w³¹czenie mechanizmu z-bufora 
 
+							 /*************************************************************************************/
 }
 
 /*************************************************************************************/
@@ -1033,7 +1064,7 @@ void keys(unsigned char key, int x, int y)
 	if (key == 'z') model = 3;
 	if (key == 'f') model = 4;
 	if (key == '+')
-		if (maxLevel<5)
+		if (maxLevel < 5)
 			++maxLevel;
 	if (key == '-')
 		if (maxLevel > 0)

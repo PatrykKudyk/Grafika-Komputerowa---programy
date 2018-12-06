@@ -302,6 +302,7 @@ void Motion(GLsizei x, GLsizei y)
 
 // Funkcja rysuj¹ca osie uk³adu wspó?rz?dnych
 
+
 void DrawEggTriangle()
 {
 	for (int i = 0; i <= N; i++)
@@ -374,6 +375,111 @@ void DrawEggTriangle()
 				glEnd();
 			}
 		}
+}
+
+void GeneratingColors()
+{
+	kolory = new Point*[N + 1];
+	for (int i = 0; i <= N; i++)
+		kolory[i] = new Point[N + 1];
+
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
+		{
+
+			//	else {
+			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
+			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
+			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
+			//	}
+		}
+
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
+		{
+			if (j == N - 1)
+			{
+				kolory[i][j].x = kolory[i][0].x;
+				kolory[i][j].y = kolory[i][0].y;
+				kolory[i][j].z = kolory[i][0].z;
+			}
+		}
+
+
+
+	/*
+	for (int i = 0; i <= N; i++)
+	{
+	for(int j = 0 ; j <= N; j++)
+	std::cout << "X = " << kolory[i][j].x << "\t";
+	std::cout << std::endl;
+	for (int j = 0; j <= N; j++)
+	std::cout << "Y = " << kolory[i][j].y << "\t";
+	std::cout << std::endl;
+	for (int j = 0; j <= N; j++)
+	std::cout << "Z = " << kolory[i][j].z << "\t";
+	std::cout << std::endl << std::endl;
+	}
+	std::cin.get();
+	std::cin.get();*/
+	tablica = new Point*[N + 1];
+	for (int i = 0; i <= N; i++)
+		tablica[i] = new Point[N + 1];
+
+}
+
+void Egg()
+{
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
+		{
+			float u = (float)i / (float)N;
+			float v = (float)j / (float)N;
+			tablica[i][j].x = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*cosf((float)M_PI*v));
+			tablica[i][j].y = (160 * pow(u, 4) - 320 * pow(u, 3) + 160 * u*u);
+			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sinf((float)M_PI*v));
+			tablica[i][j].xu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*cosf((float)M_PI*v);
+			tablica[i][j].xv = (float)M_PI*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*sinf(M_PI*v);
+			tablica[i][j].yu = (640 * pow(u, 3) - 960 * u*u + 320 * u);
+			tablica[i][j].yv = 0.0;
+			tablica[i][j].zu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*sinf((float)M_PI*v);
+			tablica[i][j].zv = (-1 * (float)M_PI)*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*cosf((float)M_PI*v);
+
+			
+			tablica[i][j].nx = tablica[i][j].yu*tablica[i][j].zv - tablica[i][j].zu*tablica[i][j].yv;
+			tablica[i][j].ny = tablica[i][j].zu*tablica[i][j].xv - tablica[i][j].xu*tablica[i][j].zv;
+			tablica[i][j].nz = tablica[i][j].xu*tablica[i][j].yv - tablica[i][j].yu*tablica[i][j].xv;
+
+			/*if (i > N / 2)
+			{
+				tablica[i][j].nx = -1.0*tablica[i][j].nx;
+				tablica[i][j].ny = -1.0*tablica[i][j].ny;
+				tablica[i][j].nz = -1.0*tablica[i][j].nz;
+			}
+			*/
+
+			if (i == N / 2)
+			{
+				tablica[i][j].nx = 0.0;
+				tablica[i][j].ny = 1.0;
+				tablica[i][j].nz = 0.0;
+			}
+
+			if (i == 0 || i == N)
+			{
+				tablica[i][j].nx = 0.0;
+				tablica[i][j].ny = -1.0;
+				tablica[i][j].nz = 0.0;
+			}
+
+			float pierwiastek = sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
+			tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
+			tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
+			tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
+			
+		}
+
+	DrawEggTriangle();
 }
 
 
@@ -868,135 +974,6 @@ void drawTriangle()
 // Funkcja okreœlaj¹ca co ma byæ rysowane (zawsze wywo³ywana, gdy trzeba 
 // przerysowaæ scenê)
 
-void GeneratingColors()
-{
-	kolory = new Point*[N + 1];
-	for (int i = 0; i <= N; i++)
-		kolory[i] = new Point[N + 1];
-
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-
-			//	else {
-			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
-			//	}
-		}
-
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-			if (j == N - 1)
-			{
-				kolory[i][j].x = kolory[i][0].x;
-				kolory[i][j].y = kolory[i][0].y;
-				kolory[i][j].z = kolory[i][0].z;
-			}
-		}
-
-
-
-	/*
-	for (int i = 0; i <= N; i++)
-	{
-	for(int j = 0 ; j <= N; j++)
-	std::cout << "X = " << kolory[i][j].x << "\t";
-	std::cout << std::endl;
-	for (int j = 0; j <= N; j++)
-	std::cout << "Y = " << kolory[i][j].y << "\t";
-	std::cout << std::endl;
-	for (int j = 0; j <= N; j++)
-	std::cout << "Z = " << kolory[i][j].z << "\t";
-	std::cout << std::endl << std::endl;
-	}
-	std::cin.get();
-	std::cin.get();*/
-	tablica = new Point*[N + 1];
-	for (int i = 0; i <= N; i++)
-		tablica[i] = new Point[N + 1];
-
-}
-
-void Egg()
-{
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-			float u = (float)i / (float)N;
-			float v = (float)j / (float)N;
-			tablica[i][j].x = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*cosf((float)M_PI*v));
-			tablica[i][j].y = (160 * pow(u, 4) - 320 * pow(u, 3) + 160 * u*u);
-			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sinf((float)M_PI*v));
-			tablica[i][j].xu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*cosf((float)M_PI*v);
-			tablica[i][j].xv = (float)M_PI*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*sinf(M_PI*v);
-			tablica[i][j].yu = (640 * pow(u, 3) - 960 * u*u + 320 * u);
-			tablica[i][j].yv = 0.0;
-			tablica[i][j].zu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*sinf((float)M_PI*v);
-			tablica[i][j].zv = (-1 * (float)M_PI)*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*cosf((float)M_PI*v);
-
-
-
-			tablica[i][j].nx = tablica[i][j].yu*tablica[i][j].zv - tablica[i][j].zu*tablica[i][j].yv;
-			tablica[i][j].ny = tablica[i][j].zu*tablica[i][j].xv - tablica[i][j].xu*tablica[i][j].zv;
-			tablica[i][j].nz = tablica[i][j].xu*tablica[i][j].yv - tablica[i][j].yu*tablica[i][j].xv;
-
-			if (i > N / 2)
-			{
-				tablica[i][j].nx = -1.0*tablica[i][j].nx;
-				tablica[i][j].ny = -1.0*tablica[i][j].ny;
-				tablica[i][j].nz = -1.0*tablica[i][j].nz;
-			}
-
-
-			if (i == N / 2)
-			{
-				tablica[i][j].nx = 0.0;
-				tablica[i][j].ny = 1.0;
-				tablica[i][j].nz = 0.0;
-			}
-
-			if (i == 0 || i == N)
-			{
-				tablica[i][j].nx = 0.0;
-				tablica[i][j].ny = -1.0;
-				tablica[i][j].nz = 0.0;
-			}
-
-
-
-
-			//	cout << "Przed: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-			float pierwiastek = sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-
-			//	if ()
-			//	{
-			tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
-			tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
-			tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
-			//	cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-			//	}
-
-			//cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz) << endl;
-		}
-
-	/*for(int i = 0; i <= N; i++)
-	{
-	for (int j = 0; j <= N; j++)
-	std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
-
-	std::cout << std::endl;
-	}
-
-	std::cin.get();
-	std::cin.get();
-	*/
-
-	DrawEggTriangle();
-
-
-}
 
 void viewerPlacing()
 {

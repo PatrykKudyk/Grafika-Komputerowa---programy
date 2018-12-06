@@ -280,7 +280,7 @@ void Egg()
 			tablica[i][j].zu = (-450 * pow(u, 4) + 900 * pow(u, 3) - 810 * u*u + 360 * u - 45)*sinf((float)M_PI*v);
 			tablica[i][j].zv = (-1 * (float)M_PI)*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*cosf((float)M_PI*v);
 
-		
+
 
 			tablica[i][j].nx = tablica[i][j].yu*tablica[i][j].zv - tablica[i][j].zu*tablica[i][j].yv;
 			tablica[i][j].ny = tablica[i][j].zu*tablica[i][j].xv - tablica[i][j].xu*tablica[i][j].zv;
@@ -294,7 +294,7 @@ void Egg()
 			}
 
 
-			if (i == N / 2) 
+			if (i == N / 2)
 			{
 				tablica[i][j].nx = 0.0;
 				tablica[i][j].ny = 1.0;
@@ -308,20 +308,20 @@ void Egg()
 				tablica[i][j].nz = 0.0;
 			}
 
-		
 
-			
+
+
 			//	cout << "Przed: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
 			float pierwiastek = sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-		
-				//	if ()
-				//	{
-				tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
-				tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
-				tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
-				//	cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-		//	}
-			
+
+			//	if ()
+			//	{
+			tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
+			tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
+			tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
+			//	cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
+			//	}
+
 			//cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz) << endl;
 		}
 
@@ -396,67 +396,67 @@ void AnglesCounting()
 	/*GLfloat temp1 = cosTheta, temp2 = sinTheta, temp3 = cosPhi, temp4 = sinPhi;
 	cosTheta = viewer[0] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]);
 	if (cosTheta < -1 || cosTheta > 1)
-		cosTheta = temp1;
+	cosTheta = temp1;
 	sinTheta = viewer[2] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]);
 	if (sinTheta < -1 || cosTheta > 1)
-		sinTheta = temp1;
+	sinTheta = temp1;
 	//cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) /	(GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1]*viewer[1]);
 	cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) / promien;
 	if (cosPhi < -1 || cosTheta > 1)
-		cosPhi = temp1;
-//	sinPhi = viewer[1] / (GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1] * viewer[1]);
+	cosPhi = temp1;
+	//	sinPhi = viewer[1] / (GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1] * viewer[1]);
 	sinPhi = viewer[1] /promien;
 
 	if (sinPhi < -1 || cosTheta > 1)
-		sinPhi = temp1;*/
+	sinPhi = temp1;*/
 
-		/*
-			GLfloat temp1 = PHI, temp2 = THETA;
-			if (PHI >= 0 && PHI <= M_PI)
-			PHI += delta_y*pix2angleY / 40.0;
-			if (PHI < 0 || PHI > 2 * M_PI)
-				PHI = temp1;
-			if (THETA >= 0 && THETA <= M_PI)
-			THETA += delta_x*pix2angleX / 40.0;
-			if (THETA < 0 || THETA > 2 * M_PI)
-				THETA = temp2;
-			*/
+	/*
+	GLfloat temp1 = PHI, temp2 = THETA;
+	if (PHI >= 0 && PHI <= M_PI)
+	PHI += delta_y*pix2angleY / 40.0;
+	if (PHI < 0 || PHI > 2 * M_PI)
+	PHI = temp1;
+	if (THETA >= 0 && THETA <= M_PI)
+	THETA += delta_x*pix2angleX / 40.0;
+	if (THETA < 0 || THETA > 2 * M_PI)
+	THETA = temp2;
+	*/
 
-			//GLfloat temp1 = PHI, temp2 = THETA;
-			//if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
-			//{
-					//PHI += delta_y*pix2angleY / 20.0;
-					//THETA += delta_x*pix2angleX / 20.0;
-			//}
-			//viewerPlacing();
-			//if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
-			//{
-			//	PHI = temp1;
-			//	THETA = temp2;
-			//}
+	//GLfloat temp1 = PHI, temp2 = THETA;
+	//if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
+	//{
+	//PHI += delta_y*pix2angleY / 20.0;
+	//THETA += delta_x*pix2angleX / 20.0;
+	//}
+	//viewerPlacing();
+	//if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
+	//{
+	//	PHI = temp1;
+	//	THETA = temp2;
+	//}
 
-			/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
-				if (kierunek == true)
-					kierunek = false;
-				else
-					kierunek = true;
+	/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
+	if (kierunek == true)
+	kierunek = false;
+	else
+	kierunek = true;
 
-			if(kierunek)
-			{
-				PHI += delta_y*pix2angleY / 40.0;
-				THETA += delta_x*pix2angleX / 40.0;
-			}
-			else
-			{
-				PHI = PHI * (-1.0);
-				THETA = THETA * (-1.0);
-			}
-			*/
+	if(kierunek)
+	{
+	PHI += delta_y*pix2angleY / 40.0;
+	THETA += delta_x*pix2angleX / 40.0;
+	}
+	else
+	{
+	PHI = PHI * (-1.0);
+	THETA = THETA * (-1.0);
+	}
+	*/
 
 	PHI += delta_y*pix2angleY;// / 40.0;
-//	PHI = fmod(PHI, M_PI);
+							  //	PHI = fmod(PHI, M_PI);
 	THETA += delta_x*pix2angleX;// / 40.0;
-//	THETA = fmod(THETA, M_PI);
+								//	THETA = fmod(THETA, M_PI);
 
 	if (cosf(PHI) >= 0.0f)
 		y = 1.0f;
@@ -485,21 +485,21 @@ void RenderScene(void)
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
 
 
-/*
+	/*
 	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
 	{
-		theta[0] += delta_x*pix2angleX;
-		theta[1] += delta_y*pix2angleY;
+	theta[0] += delta_x*pix2angleX;
+	theta[1] += delta_y*pix2angleY;
 
 	}                                  // do ró¿nicy po³o¿eñ kursora myszy
 
 	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
 	{
-		GLfloat temp = viewer[2];
-		if (viewer[2] >= 7.0 && viewer[2] <= 30.0)
-			viewer[2] += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
-		if (viewer[2] < 7.0 || viewer[2] > 30.0)
-			viewer[2] = temp;
+	GLfloat temp = viewer[2];
+	if (viewer[2] >= 7.0 && viewer[2] <= 30.0)
+	viewer[2] += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
+	if (viewer[2] < 7.0 || viewer[2] > 30.0)
+	viewer[2] = temp;
 	}
 	*/
 

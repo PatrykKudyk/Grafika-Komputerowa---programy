@@ -79,39 +79,57 @@ void Axes(void)
 
 void RysowanieCzerwony(Point A, float sideLength)
 {
-	glBegin(GL_POLYGON);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
+	glBegin(GL_POLYGON);		//rysowanie wielok¹ta (czworok¹t) - Podstawa ostros³upa
+	glColor3f(1.0f, 0.0f, 0.0f);	//ustawienie koloru na czerwony
+
+	//rysowanie kolejnych punktów podaj¹c odpowiednie wspó³rzêdne
+	glVertex3f(A.x, A.y, A.z);		
 	glVertex3f(A.x + sideLength, A.y, A.z);
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.9f, 0.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.8f, 0.0f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.7f, 0.0f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.6f, 0.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z);
-	glEnd();
+	glEnd();		//zakoñczenie rysowania wielok¹ta
 
 
+	glBegin(GL_TRIANGLES);	//rysowanie jednego z czterech trójk¹tów
+	glColor3f(0.9f, 0.0f, 0.0f);	//ustawienie koloru na lekko mniej czerwony
+
+	//rysowanie kolejnych punktów podaj¹c odpowiednie wspó³rzêdne
+	glVertex3f(A.x, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glEnd();	//zakoñczenie rysowania trójk¹ta
+
+
+	glBegin(GL_TRIANGLES);	//rysowanie kolejnego z czterech trójk¹tów
+	glColor3f(0.8f, 0.0f, 0.0f);	//ustawienie koloru na lekko mniej czerwony
+
+	//rysowanie kolejnych punktów podaj¹c odpowiednie wspó³rzêdne
+	glVertex3f(A.x + sideLength, A.y, A.z);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glEnd();	//zakoñczenie rysowania trójk¹ta
+
+
+	glBegin(GL_TRIANGLES);	//rysowanie kolejnego z czterech trójk¹tów
+	glColor3f(0.7f, 0.0f, 0.0f);	//ustawienie koloru na lekko mniej czerwony
+
+	//rysowanie kolejnych punktów podaj¹c odpowiednie wspó³rzêdne
+	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glEnd();	//zakoñczenie rysowania trójk¹ta
+
+
+	glBegin(GL_TRIANGLES);	//rysowanie kolejnego z czterech trójk¹tów
+	glColor3f(0.6f, 0.0f, 0.0f);	//ustawienie koloru na lekko mniej czerwony
+
+	//rysowanie kolejnych punktów podaj¹c odpowiednie wspó³rzêdne
+	glVertex3f(A.x, A.y, A.z + sideLength);
+	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
+	glVertex3f(A.x, A.y, A.z);
+	glEnd();	//zakoñczenie rysowania trójk¹ta
+
+	//Rysowanie lini na rogach trójk¹tów i podstawy. Kolor jest niebieski
 	glBegin(GL_LINE_STRIP);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glVertex3f(A.x, A.y, A.z);
@@ -341,107 +359,63 @@ void RysowanieFioletowy(Point A, float sideLength)
 
 void DrawSierpinski(Point A, float sideLength, int level)
 {
-	if (level >= maxLevel)
+	if (level >= maxLevel)	//sprawdzenie, czy algorytm zszed³ ju¿ tak nisko jak jest to wymagane
 	{
-		switch (model)
+		switch (model)		//sprawdzenie który kolor ostros³upa zosta³ wybrany przez u¿ytkownika
 		{
 		case 1:
-			RysowanieCzerwony(A, sideLength);
+			RysowanieCzerwony(A, sideLength);	//Wywo³anie metody rysuj¹cej czerwony ostros³up
 			break;
 		case 2:
-			RysowanieNiebieski(A, sideLength);
+			RysowanieNiebieski(A, sideLength);	//Wywo³anie metody rysuj¹cej niebieski ostros³up
 			break;
 		case 3:
-			RysowanieZielony(A, sideLength);
+			RysowanieZielony(A, sideLength);	//Wywo³anie metody rysuj¹cej zielony ostros³up
 			break;
 		case 4:
-			RysowanieFioletowy(A, sideLength);
+			RysowanieFioletowy(A, sideLength);	//Wywo³anie metody rysuj¹cej fioletowy ostros³up
 			break;
 		default:
 			break;
 		}
-
-
 	}
 	else
 	{
-		sideLength = sideLength / 2.0;
-		level += 1;
-		DrawSierpinski(A, sideLength, level);
-		A.x += sideLength;
-		DrawSierpinski(A, sideLength, level);
-		A.x -= sideLength;
-		A.z += sideLength;
-		DrawSierpinski(A, sideLength, level);
-		A.x += sideLength;
-		DrawSierpinski(A, sideLength, level);
-		A.x -= sideLength;
-		A.z -= sideLength;
+		sideLength = sideLength / 2.0;			//podzia³ d³ugoœci boku
+		level += 1;								//zwiêkszenie poziomu algorytmu
+		DrawSierpinski(A, sideLength, level);	//rekurencyjne wywo³anie funkcji dla pierwszego punktu
+		A.x += sideLength;			//odpowiednie ustawienie punktu do przekazania dalej
+		DrawSierpinski(A, sideLength, level);	//rekurencyjne wywo³anie funkcji dla drugiego punktu
+		A.x -= sideLength;			//odpowiednie ustawienie punktu 
+		A.z += sideLength;			//do przekazania dalej
+		DrawSierpinski(A, sideLength, level);	//rekurencyjne wywo³anie funkcji dla trzeciego punktu
+		A.x += sideLength;			//odpowiednie ustawienie punktu do przekazania dalej
+		DrawSierpinski(A, sideLength, level);	//rekurencyjne wywo³anie funkcji dla czwartego punktu
+		A.x -= sideLength;			//odpowiednie ustawienie punktu 
+		A.z -= sideLength;			//do przekazania dalej
 		A.y += sqrt(sideLength*(sideLength / 2.0));
-		A.x += (sideLength / 2.0);
-		A.z += (sideLength / 2.0);
-		DrawSierpinski(A, sideLength, level);
+		A.x += (sideLength / 2.0);	//odpowiednie ustawienie punktu
+		A.z += (sideLength / 2.0);	//do przekazania dalej
+		DrawSierpinski(A, sideLength, level);	//rekurencyjne wywo³anie funkcji dla pi¹tego punktu
 	}
-
-
-	/*
-	glBegin(GL_LINE_STRIP);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-5.0, 0.0,-5.0);
-	glVertex3f(5.0, 0.0, -5.0);
-	glVertex3f(5.0, 0.0, 5.0);
-	glVertex3f(-5.0, 0.0, 5.0);
-	glVertex3f(-5.0, 0.0, -5.0);
-
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-5.0, 0.0, -5.0);
-	glVertex3f(0.0,5.0,0.0);
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(5.0, 0.0, -5.0);
-	glVertex3f(0.0, 5.0, 0.0);
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(5.0, 0.0, 5.0);
-	glVertex3f(0.0, 5.0, 0.0);
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-5.0, 0.0, 5.0);
-	glVertex3f(0.0, 5.0, 0.0);
-	glEnd();
-
-	*/
-
-
-
-
 
 }
 
 
 void spinPyramid()
 {
-	if (stop)
+	if (stop)	//sprawdzam czy nie zosta³a nacisnieta spacja
 	{
-		if (spin == 0)
-		{
-			theta[0] += wartosc;
-			if (theta[0] < -30.0)  wartosc = 0.015;
-			if (theta[0] > 0.0) wartosc = -0.015;
-			theta[1] -= 0.25;
-		}
+		theta[0] += wartosc;						//	Fragment kodu sprawiaj¹cy, ¿e ostros³up wzgledem osi OX porusza siê bardzo nieznacznie
+		if (theta[0] < -30.0)  wartosc = 0.015;		//	w celu pokazania trójwymiarowoœci. 
+		if (theta[0] > 0.0) wartosc = -0.015;		//	Ostros³up tak jakby odbija siê od dwóch niewidzialnych œcian na osi OX
+
+		if (spin == 0)	//sprawdzam w ktora strone ma sie krecic ostros³up  (obs³ugiwane przy pomocy klawisza "q")
+			theta[1] -= 0.25;			//Obrót ostros³upa wzglêdem osi OY
+		
 		else
-		{
-			theta[0] += wartosc;
-			if (theta[0] < -30.0)  wartosc = 0.015;
-			if (theta[0] > 0.0) wartosc = -0.015;
-			theta[1] += 0.25;
-		}
+			theta[1] += 0.25;			//Obrót ostros³upa wzglêdem osi OY
+		
 		glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
 	}
 }
@@ -454,32 +428,22 @@ void spinPyramid()
 
 void RenderScene(void)
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
 
 	glLoadIdentity();
 	// Czyszczenie macierzy bie¿¹cej
-	//	Axes();
-	// Narysowanie osi przy pomocy funkcji zdefiniowanej wy¿ej
 
-	//glRotated(-30.0, 1.0, 1.0, 1.0);  // Obrót o 60 stopni
-
-	glRotatef(theta[0], 1.0, 0.0, 0.0);
-
-	glRotatef(theta[1], 0.0, 1.0, 0.0);
-
-	glRotatef(theta[2], 0.0, 0.0, 1.0);
-
+	glRotatef(theta[0], 1.0, 0.0, 0.0);	//obrót sceny wzglêdem osi OX
+	glRotatef(theta[1], 0.0, 1.0, 0.0);	//obrót sceny wzglêdem osi OY
+	glRotatef(theta[2], 0.0, 0.0, 1.0);	//obrót sceny wzglêdem osi OZ
 
 	DrawSierpinski(startPoint, startSideLength, 0);
 
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania
 
-
 	glutSwapBuffers();
-	//
 }
 
 /*************************************************************************************/
@@ -503,27 +467,26 @@ void MyInit(void)
 
 void keys(unsigned char key, int x, int y)
 {
-	if (key == 'c') model = 1;
-	if (key == 'n') model = 2;
-	if (key == 'z') model = 3;
-	if (key == 'f') model = 4;
-	if (key == '+')
+	if (key == 'c') model = 1;	//je¿eli naciœniête c to kolor trojkata czerwony
+	if (key == 'n') model = 2;	//je¿eli naciœniête n to kolor trojkata niebieski
+	if (key == 'z') model = 3;	//je¿eli naciœniête z to kolor trojkata zielony
+	if (key == 'f') model = 4;	//je¿eli naciœniête f to kolor trojkata fioletowy
+	if (key == '+')		//je¿eli naciœniêty + to algorytm wchodzi na poziom wy¿ej
 		if (maxLevel<5)
 			++maxLevel;
-	if (key == '-')
+	if (key == '-')		//je¿eli naciœniêty - to algorytm schodzi o poziom ni¿ej
 		if (maxLevel > 0)
 			--maxLevel;
-	if (key == 'q')
+	if (key == 'q')		//je¿eli naciœniête q to zmiana kierunku obrotu ostros³upa
 		if (spin == 0)
 			spin = 1;
 		else
 			spin = 0;
-	if (key == ' ')
+	if (key == ' ')		//je¿eli naciœniête q to zatrzymane obracanie trójk¹ta
 		if (stop == 0)
 			stop = 1;
 		else
 			stop = 0;
-
 
 	RenderScene(); // przerysowanie obrazu sceny
 }
@@ -572,17 +535,17 @@ void ChangeSize(GLsizei horizontal, GLsizei vertical)
 
 void main(void)
 {
-	srand(time(NULL));
+	srand(time(NULL));		//umo¿liwienie losowania liczb
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(500, 500);	//startowy rozmiar okienka
 
-	glutCreateWindow("Trojkat sierpinskiego w 3-D");
+	glutCreateWindow("Trojkat sierpinskiego w 3-D");	//Nazwa okienka
 
-	glutKeyboardFunc(keys);
+	glutKeyboardFunc(keys);		//obs³uga klawiarury
 
-	glutIdleFunc(spinPyramid);
+	glutIdleFunc(spinPyramid);	//obs³uga obrotu ostros³upa
 
 	glutDisplayFunc(RenderScene);
 	// Okreœlenie, ¿e funkcja RenderScene bêdzie funkcj¹ zwrotn¹

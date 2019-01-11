@@ -20,16 +20,16 @@ typedef float point3[3];
 
 // Funkcja rysuj¹ca osie uk³adu wspó³rzêdnych
 
-struct Point
+struct Point	//struktura do obs³ugi wspó³rzêdnych punktów
 {
-	float x;
-	float y;
-	float z;
+	float x;	//wspó³rzêdna x
+	float y;	//wspó³rzêdna y
+	float z;	//wspó³rzêdna z
 };
 
 
 //------------ZMIENNE GLOBALNE ------------------------//
-static int N = 40;			//wielkosc tablicy
+static int N = 70;			//wielkosc tablicy
 
 Point **tablica;		//dynamiczna tablica struktur punktowych
 
@@ -43,11 +43,11 @@ static GLfloat theta[] = { 0.0, 0.0, 0.0 }; // trzy k¹ty obrotu
 
 void DrawEggPoints()
 {
-	glBegin(GL_POINTS);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_POINTS);	//rozpoczêcie rysowania punktów
+	glColor3f(1.0f, 1.0f, 1.0f); //ustawiam kolor punktów na bia³y
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
-			glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
+			glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z); //w podwójnej pêtli wypisuje kolejne punkty z macierzy "tablica" przechowuj¹cej wspó³rzêdne punktów
 	glEnd();
 }
 
@@ -56,21 +56,19 @@ void DrawEggLines()
 
 	for (int i = 0; i <= N; i++)
 	{
-		glBegin(GL_LINE_STRIP);
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glBegin(GL_LINE_STRIP);	//rozpoczêcie rysowania lini poziomych
+		glColor3f(1.0f, 1.0f, 1.0f);	//ustawienie koloru linii na bia³y
 		for (int j = 0; j <= N; j++)
 			glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
 		glEnd();
-
-		glBegin(GL_LINE_STRIP);
-		glColor3f(1.0f, 1.0f, 1.0f);
+		
+		glBegin(GL_LINE_STRIP);	//rozpoczêcie rysowania lini pionowych
+		glColor3f(1.0f, 1.0f, 1.0f);	//ustawienie koloru linii na bia³y
 		for (int j = 0; j <= N; j++)
 			glVertex3f(tablica[j][i].x, tablica[j][i].y - 5.0f, tablica[j][i].z);
 		glEnd();
-
+		
 	}
-
-
 }
 
 void DrawEggTriangle()
@@ -78,46 +76,46 @@ void DrawEggTriangle()
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
 		{
-			if (i <= (N - 1))
+			if (i <= (N - 1))	//pêtla nie uwzglêdniaj¹ca krawêdzi macierzy, tak ¿eby unikn¹æ luki w rysowaniu
 			{
 				if (j <= (N - 1))
 				{
-					glBegin(GL_TRIANGLES);
-					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
-					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
-					glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
-					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
+					glBegin(GL_TRIANGLES);	//rozpoczêcie rysowania trójk¹ta
+					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);	//dobranie odpowiedniego koloru
+					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);	//dobranie odpowiedniego koloru
+					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+					glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);	//dobranie odpowiedniego koloru
+					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
 					glEnd();
-					glBegin(GL_TRIANGLES);
-					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
-					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
-					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
-					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
+					glBegin(GL_TRIANGLES);	//rozpoczêcie rysowania trójk¹ta
+					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);	//dobranie odpowiedniego koloru
+					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+					glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);	//dobranie odpowiedniego koloru
+					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);	//dobranie odpowiedniego koloru
+					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
 					glEnd();
 				}
 			}
 			else
 			{
-				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
-				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
-				glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
-				glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);
+				glBegin(GL_TRIANGLES);	//rozpoczêcie rysowania trójk¹ta
+				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);	//dobranie odpowiedniego koloru
+				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);	//dobranie odpowiedniego koloru
+				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+				glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);	//dobranie odpowiedniego koloru
+				glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);	//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
 				glEnd();
 
-				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
-				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
-				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
-				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
+				glBegin(GL_TRIANGLES);	//rozpoczêcie rysowania trójk¹ta
+				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);	//dobranie odpowiedniego koloru
+				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+				glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);	//dobranie odpowiedniego koloru
+				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
+				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);	//dobranie odpowiedniego koloru
+				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);//wczytanie wspo³rzêdnych punktu dla wierzcho³ka trójk¹ta
 				glEnd();
 			}
 		}
@@ -125,81 +123,37 @@ void DrawEggTriangle()
 
 void GeneratingColors()
 {
-	kolory = new Point*[N + 1];
+	kolory = new Point*[N + 1];	//tworzenie dynamicznej tablicy kolorów o zadanej wielkoœci
 	for (int i = 0; i <= N; i++)
-		kolory[i] = new Point[N + 1];
-
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-
-			//	else {
-			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
-			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
-			//	}
-		}
+		kolory[i] = new Point[N + 1];	//tworzenie dynamicznych tablic w dynamicznej tablicy (kolumny w wierszach)
 
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
 		{
-			if (j == N - 1)
-			{
-				kolory[i][j].x = kolory[i][0].x;
-				kolory[i][j].y = kolory[i][0].y;
-				kolory[i][j].z = kolory[i][0].z;
-			}
+			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);	//losowanie pseudolosowego koloru z zakresu (0.0 do 0.999)
+			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);	//losowanie pseudolosowego koloru z zakresu (0.0 do 0.999)
+			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);	//losowanie pseudolosowego koloru z zakresu (0.0 do 0.999)
 		}
-
-
-
-	/*
-	for (int i = 0; i <= N; i++)
-	{
-		for(int j = 0 ; j <= N; j++)
-			std::cout << "X = " << kolory[i][j].x << "\t";
-		std::cout << std::endl;
-		for (int j = 0; j <= N; j++)
-			std::cout << "Y = " << kolory[i][j].y << "\t";
-		std::cout << std::endl;
-		for (int j = 0; j <= N; j++)
-			std::cout << "Z = " << kolory[i][j].z << "\t";
-		std::cout << std::endl << std::endl;
-	}
-	std::cin.get();
-	std::cin.get();*/
 }
 
 void Egg()
 {
 
-	tablica = new Point*[N + 1];
+	tablica = new Point*[N + 1]; //tworzenie tablicy dynamicznej przy u¿yciu zadeklarowanego globalnie wskaŸnika struktury Punkt
 	for (int i = 0; i <= N; i++)
-		tablica[i] = new Point[N + 1];
+		tablica[i] = new Point[N + 1]; //w pêtli nastêpuje dynamiczne tworzenie tablicy tablic 
 
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
 		{
-			float u = (float)i / (float)N;
-			float v = (float)j / (float)N;
-			tablica[i][j].x = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*cos((float)M_PI*v));
-			tablica[i][j].y = (160 * pow(u, 4) - 320 * pow(u, 3) + 160 * u*u);
-			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sin((float)M_PI*v));
+			float u = (float)i / (float)N; //przypisywanie u odpowiednia wartosc
+			float v = (float)j / (float)N; //przypisywanie v odpowiednia wartosc
+			tablica[i][j].x = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*cos((float)M_PI*v)); //obliczanie wspolrzednej x dla punktu przy wykorzystaniu podanego przez prowadzacego wzoru
+			tablica[i][j].y = (160 * pow(u, 4) - 320 * pow(u, 3) + 160 * u*u); //obliczanie wspolrzednej y dla punktu przy wykorzystaniu podanego przez prowadzacego wzoru
+			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sin((float)M_PI*v)); //obliczanie wspolrzednej z dla punktu przy wykorzystaniu podanego przez prowadzacego wzoru
 		}
 
-	/*for(int i = 0; i <= N; i++)
-	{
-		for (int j = 0; j <= N; j++)
-			std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
-
-		std::cout << std::endl;
-	}
-
-	std::cin.get();
-	std::cin.get();
-	*/
-
-	switch (model)
+	switch (model) //zmienna "model" odpowiada za wyswietlanie jajka /1-punkty, 2-siatka, 3-trojkaty
 	{
 	case 1:
 		DrawEggPoints();
@@ -217,15 +171,14 @@ void Egg()
 
 void spinEgg()
 {
+	theta[0] -= 0.25;	//obrót wzglêdem osi OX
+	if (theta[0] > 360.0) theta[0] -= 360.0;	//jeœli przekroczymy wartoœæ 360 stopni, to jest ustawiana znów na 0 
 
-	theta[0] -= 0.25;
-	if (theta[0] > 360.0) theta[0] -= 360.0;
+	theta[1] -= 0.25;	//obrót wzglêdem osi OY
+	if (theta[1] > 360.0) theta[1] -= 360.0;	//jeœli przekroczymy wartoœæ 360 stopni, to jest ustawiana znów na 0 
 
-	theta[1] -= 0.25;
-	if (theta[1] > 360.0) theta[1] -= 360.0;
-
-	theta[2] -= 0.25;
-	if (theta[2] > 360.0) theta[2] -= 360.0;
+	theta[2] -= 0.25;	//obrót wzglêdem osi OZ
+	if (theta[2] > 360.0) theta[2] -= 360.0;	//jeœli przekroczymy wartoœæ 360 stopni, to jest ustawiana znów na 0 
 
 	glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
 }
@@ -276,7 +229,6 @@ void Axes(void)
 
 void RenderScene(void)
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
 
@@ -284,28 +236,17 @@ void RenderScene(void)
 	// Czyszczenie macierzy bie¿¹cej
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej wy¿ej
-/*	glColor3f(1.0f, 1.0f, 1.0f); // Ustawienie koloru rysowania na bia³y
 
-	glRotated(60.0, 1.0, 1.0, 1.0);  // Obrót o 60 stopni
+	glRotatef(theta[0], 1.0, 0.0, 0.0);	//obrót jajka wzglêdem osi OX
+	glRotatef(theta[1], 0.0, 1.0, 0.0);	//obrót jajka wzglêdem osi OY
+	glRotatef(theta[2], 0.0, 0.0, 1.0);	//obrót jajka wzglêdem osi OZ
 
-	glutWireTeapot(3.0); // Narysowanie obrazu czajnika do herbaty
-	*/
-
-	//glRotated(35.0, 1.0, 1.0, 1.0);  // Obrót o 60 stopni
-
-
-	glRotatef(theta[0], 1.0, 0.0, 0.0);
-	glRotatef(theta[1], 0.0, 1.0, 0.0);
-	glRotatef(theta[2], 0.0, 0.0, 1.0);
-
-	Egg();
+	Egg();	//metoda rysuj¹ca odpowiednie jajko
 
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania
 
-
-	glutSwapBuffers();
-	//
+	glutSwapBuffers();	
 }
 
 /*************************************************************************************/
@@ -314,9 +255,9 @@ void RenderScene(void)
 
 void keys(unsigned char key, int x, int y)
 {
-	if (key == 'p') model = 1;
-	if (key == 'w') model = 2;
-	if (key == 's') model = 3;
+	if (key == 'p') model = 1;	//w przypadku naciœniêcia "p" jajko bêdzie rysowane jako punkty
+	if (key == 'w') model = 2;	//w przypadku naciœniêcia "w" jajko bêdzie rysowane jako siatka
+	if (key == 's') model = 3;	//w przypadku naciœniêcia "s" jajko bêdzie rysowane jako trójk¹ty
 
 	RenderScene(); // przerysowanie obrazu sceny
 }

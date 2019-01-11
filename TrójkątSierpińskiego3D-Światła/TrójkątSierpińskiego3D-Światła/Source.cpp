@@ -42,8 +42,6 @@ Point startPoint = { { -5.0f } ,{ -2.5f },{ -5.0f } };
 
 float viewerCamera = 1.0;
 
-int model = 1;  // 1- czerwony, 2- niebieski, 3 - zielony, 4 - fioletowy
-
 static int N = 40;			//wielkosc tablicy
 
 Point **tablica;		//dynamiczna tablica struktur punktowych
@@ -55,14 +53,10 @@ GLfloat promien = 20.0;
 bool kierunek = true;  //true - dodawanie, false - odejmowanie
 
 GLfloat PHI = 0.0, THETA = 0.0;
-//GLfloat cosPhi = 0.5, sinPhi = 0.5, cosTheta = 0.5, sinTheta = 0.5;
 
 static GLfloat viewer[] = { 0.1f, 0.1f, 10.0f };
 // inicjalizacja po³o¿enia obserwatora
 
-//static GLfloat viewingPoint[] = { 0.0, 0.0, 0.0 };
-
-//static GLfloat theta[] = { 0.0, 0.0 };   // k¹t obrotu obiektu
 static GLfloat pix2angleX;     // przelicznik pikseli na stopnie
 static GLfloat pix2angleY;     // przelicznik pikseli na stopnie
 
@@ -134,68 +128,6 @@ void Motion(GLsizei x, GLsizei y)
 
 /*************************************************************************************/
 
-
-// Funkcja rysuj¹ca osie uk³adu wspó?rz?dnych
-
-/*void spinTeapot()
-{
-theta1[0] += 0.15;
-theta1[1] -= 0.25;
-theta1[2] += 0.05;
-glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
-}
-*/
-
-void DrawEggTriangle()
-{
-	for (int i = 0; i <= N; i++)
-		for (int j = 0; j <= N; j++)
-		{
-			if (i <= (N - 1))
-			{
-				if (j <= (N - 1))
-				{
-					glBegin(GL_TRIANGLES);
-					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
-					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
-					glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
-					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
-					glEnd();
-					glBegin(GL_TRIANGLES);
-					glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
-					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
-					glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
-					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
-					glEnd();
-				}
-			}
-			else
-			{
-				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
-				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
-				glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
-				glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);
-				glEnd();
-
-				glBegin(GL_TRIANGLES);
-				glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
-				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
-				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
-				glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
-				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
-				glEnd();
-			}
-		}
-}
-
 void Axes(void)
 {
 
@@ -235,10 +167,11 @@ void Axes(void)
 Point ObliczenieWektoraNormalnego( Point wektor1, Point wektor2)
 {
 	Point wektorNormalny;
-	wektorNormalny.x = wektor1.y*wektor2.z - wektor1.z*wektor2.y;
-	wektorNormalny.y = wektor1.z*wektor2.x - wektor1.x*wektor2.z;
-	wektorNormalny.z = wektor1.x*wektor2.y - wektor1.y*wektor2.x;
-	//wektor normalny, na poczatku ustawiony na podstawe;
+	wektorNormalny.x = wektor1.y*wektor2.z - wektor1.z*wektor2.y;	//
+	wektorNormalny.y = wektor1.z*wektor2.x - wektor1.x*wektor2.z;	//obliczanie wektora normalnego p³aszczyzny przy u¿yciu
+	wektorNormalny.z = wektor1.x*wektor2.y - wektor1.y*wektor2.x;	//dwóch wektorów p³aszczyzny
+
+	//normalizacja wektora normalnego
 	float pierwiastek = sqrtf(wektorNormalny.x*wektorNormalny.x + wektorNormalny.y*wektorNormalny.y + wektorNormalny.z*wektorNormalny.z);
 
 	wektorNormalny.x = wektorNormalny.x / pierwiastek;
@@ -255,10 +188,10 @@ void RysowanieCzerwony(Point A, float sideLength)
 	Point wektor1 = { 0.0f, 0.0f, sideLength }, wektor2 = { sideLength, 0.0f, 0.0f };
 	//Startowe wektory to AD i AB
 	//wektor1 = AD, wektor2 = AB
-	Point wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);
-	wektorNormalny.x = -1 * (wektorNormalny.x);
-	wektorNormalny.y = -1 * (wektorNormalny.y);
-	wektorNormalny.z = -1 * (wektorNormalny.z);
+	Point wektorNormalny = ObliczenieWektoraNormalnego(wektor1, wektor2);	//obliczanie wektora normalnego
+	wektorNormalny.x = -1 * (wektorNormalny.x);	//
+	wektorNormalny.y = -1 * (wektorNormalny.y);	//odwrocenie wektora podstawy
+	wektorNormalny.z = -1 * (wektorNormalny.z);	//
 	
 
 	glBegin(GL_POLYGON);
@@ -273,6 +206,8 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glEnd();
 
+	//obliczenie nowych wektorów pomocniczych i podanie ich do funkcji
+	//obliczaj¹cej wektor normalny na ich podstawie
 	wektor1.x = sideLength / 2.0;
 	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
 	wektor1.z = sideLength / 2.0;
@@ -291,6 +226,8 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x + sideLength, A.y, A.z);
 	glEnd();
 
+	//obliczenie nowych wektorów pomocniczych i podanie ich do funkcji
+	//obliczaj¹cej wektor normalny na ich podstawie
 	wektor1.x = (sideLength / 2.0 - sideLength);
 	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
 	wektor1.z = (sideLength / 2.0);
@@ -309,6 +246,8 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
 	glEnd();
 
+	//obliczenie nowych wektorów pomocniczych i podanie ich do funkcji
+	//obliczaj¹cej wektor normalny na ich podstawie
 	wektor1.x = sideLength / 2.0 - sideLength;
 	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
 	wektor1.z = sideLength / 2.0 - sideLength;
@@ -327,6 +266,8 @@ void RysowanieCzerwony(Point A, float sideLength)
 	glVertex3f(A.x, A.y, A.z + sideLength);
 	glEnd();
 
+	//obliczenie nowych wektorów pomocniczych i podanie ich do funkcji
+	//obliczaj¹cej wektor normalny na ich podstawie
 	wektor1.x = sideLength / 2.0;
 	wektor1.y = sqrt(sideLength*(sideLength / 2.0));
 	wektor1.z = sideLength / 2.0 - sideLength;
@@ -377,224 +318,11 @@ void RysowanieCzerwony(Point A, float sideLength)
 
 }
 
-void RysowanieZielony(Point A, float sideLength)
-{
-	glBegin(GL_POLYGON);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.9f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.8f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.7f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.6f, 0.0f);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z);
-	glEnd();
-
-
-	glBegin(GL_LINE_STRIP);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z);
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-}
-
-void RysowanieNiebieski(Point A, float sideLength)
-{
-	glBegin(GL_POLYGON);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.0f, 0.9f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.0f, 0.8f);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.0f, 0.7f);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.0f, 0.0f, 0.6f);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z);
-	glEnd();
-
-
-	glBegin(GL_LINE_STRIP);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z);
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-}
-
-void RysowanieFioletowy(Point A, float sideLength)
-{
-	glBegin(GL_POLYGON);
-	glColor3f(1.0f, 0.0f, 1.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.9f, 0.0f, 0.9f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.8f, 0.0f, 0.8f);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.7f, 0.0f, 0.7f);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor3f(0.6f, 0.0f, 0.6f);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glVertex3f(A.x, A.y, A.z);
-	glEnd();
-
-
-	glBegin(GL_LINE_STRIP);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x, A.y, A.z);
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(A.x, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(A.x, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-	glBegin(GL_LINES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(A.x + sideLength, A.y, A.z + sideLength);
-	glVertex3f(A.x + (sideLength / 2.0), A.y + sqrt(sideLength*(sideLength / 2.0)), A.z + (sideLength / 2.0));
-	glEnd();
-}
-
 void DrawSierpinski(Point A, float sideLength, int level)
 {
 	if (level >= maxLevel)
 	{
-		switch (model)
-		{
-		case 1:
 			RysowanieCzerwony(A, sideLength);
-			break;
-		case 2:
-			RysowanieNiebieski(A, sideLength);
-			break;
-		case 3:
-			RysowanieZielony(A, sideLength);
-			break;
-		case 4:
-			RysowanieFioletowy(A, sideLength);
-			break;
-		default:
-			break;
-		}
-
-
 	}
 	else
 	{
@@ -615,11 +343,6 @@ void DrawSierpinski(Point A, float sideLength, int level)
 		A.z += (sideLength / 2.0);
 		DrawSierpinski(A, sideLength, level);
 	}
-
-
-	
-
-
 
 }
 
@@ -708,18 +431,14 @@ void RenderScene(void)
 
 	glRotatef(theta[2], 0.0, 0.0, 1.0);
 
-
 	DrawSierpinski(startPoint, startSideLength, 0);
-
 
 	// Narysowanie czajnika
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania
 	glutSwapBuffers();
-
-
-
 }
+
 /*************************************************************************************/
 // Funkcja ustalaj¹ca stan renderowania
 
@@ -809,10 +528,6 @@ void MyInit(void)
 
 void keys(unsigned char key, int x, int y)
 {
-	if (key == 'c') model = 1;
-	if (key == 'n') model = 2;
-	if (key == 'z') model = 3;
-	if (key == 'f') model = 4;
 	if (key == '+')
 		if (maxLevel<5)
 			++maxLevel;
@@ -877,7 +592,7 @@ void main(void)
 
 	glutInitWindowSize(500, 500);
 
-	glutCreateWindow("Trojkat sierpinskiego w 3-D z ruchomym obserwatorem");
+	glutCreateWindow("Trojkat sierpinskiego w 3D z oœwietleniem i ruchomym obserwatorem");
 
 	glutKeyboardFunc(keys);
 

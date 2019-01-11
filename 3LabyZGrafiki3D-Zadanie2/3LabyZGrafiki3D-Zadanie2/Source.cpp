@@ -22,18 +22,18 @@ typedef float point3[3];
 
 struct Point
 {
-	float x;
-	float y;
-	float z;
-	float xu;
-	float xv;
-	float yu;
-	float yv;
-	float zu;
-	float zv;
-	float nx;
-	float ny;
-	float nz;
+	float x;	//wspó³rzêdna X punktu
+	float y;	//wspó³rzêdna Y punktu
+	float z;	//wspó³rzêdna Z punktu
+	float xu;	//wspó³rzêdna X wektora u
+	float xv;	//wspó³rzêdna X wektora v
+	float yu;	//wspó³rzêdna Y wektora u
+	float yv;	//wspó³rzêdna Y wektora v
+	float zu;	//wspó³rzêdna Z wektora u
+	float zv;	//wspó³rzêdna Z wektora v
+	float nx;	//wspó³rzêdna X wektora normalnego
+	float ny;	//wspó³rzêdna Y wektora normalnego
+	float nz;	//wspó³rzêdna Z wektora normalnego
 };
 
 static int N = 40;			//wielkosc tablicy
@@ -136,14 +136,6 @@ void Motion(GLsizei x, GLsizei y)
 
 // Funkcja rysuj¹ca osie uk³adu wspó?rz?dnych
 
-/*void spinTeapot()
-{
-theta1[0] += 0.15;
-theta1[1] -= 0.25;
-theta1[2] += 0.05;
-glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
-}
-*/
 
 void DrawEggTriangle()
 {
@@ -155,29 +147,23 @@ void DrawEggTriangle()
 				if (j <= (N - 1))
 				{
 					glBegin(GL_TRIANGLES);
-					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glColor3f(1.0, 1.0, 0.0);
 					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
 					glColor3f(1.0, 1.0, 0.0);
 					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
 					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
-					//glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
 					glColor3f(1.0, 1.0, 0.0);
 					glNormal3f(tablica[i][j + 1].nx, tablica[i][j + 1].ny, tablica[i][j + 1].nz);
 					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
 					glEnd();
 					glBegin(GL_TRIANGLES);
-					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glColor3f(1.0, 1.0, 0.0);
 					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					//glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
 					glColor3f(1.0, 1.0, 0.0);
 					glNormal3f(tablica[i + 1][j].nx, tablica[i + 1][j].ny, tablica[i + 1][j].nz);
 					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
-					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
 					glColor3f(1.0, 1.0, 0.0);
 					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
 					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
@@ -187,30 +173,24 @@ void DrawEggTriangle()
 			else
 			{
 				glBegin(GL_TRIANGLES);
-				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 				glColor3f(1.0, 1.0, 0.0);
 				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
 				glColor3f(1.0, 1.0, 0.0);
 				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
 				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
-				//glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
 				glColor3f(1.0, 1.0, 0.0);
 				glNormal3f(tablica[i][0].nx, tablica[i][0].ny, tablica[i][0].nz);
 				glVertex3f(tablica[i][0].x, tablica[i][0].y - 5.0f, tablica[i][0].z);
 				glEnd();
 
 				glBegin(GL_TRIANGLES);
-				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 				glColor3f(1.0, 1.0, 0.0);
 				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				//glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
 				glColor3f(1.0, 1.0, 0.0);
 				glNormal3f(tablica[0][j].nx, tablica[0][j].ny, tablica[0][j].nz);
 				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
-				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
 				glColor3f(1.0, 1.0, 0.0);
 				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
 				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
@@ -288,11 +268,13 @@ void Egg()
 			tablica[i][j].zv = (-1 * (float)M_PI)*(90 * pow(u, 5) - 225 * pow(u, 4) + 270 * pow(u, 3) - 180 * u*u + 45 * u)*cosf((float)M_PI*v);
 
 		
-
+			//obliczanie wspó³rzêdnych wektora normalnego
 			tablica[i][j].nx = tablica[i][j].yu*tablica[i][j].zv - tablica[i][j].zu*tablica[i][j].yv;
 			tablica[i][j].ny = tablica[i][j].zu*tablica[i][j].xv - tablica[i][j].xu*tablica[i][j].zv;
 			tablica[i][j].nz = tablica[i][j].xu*tablica[i][j].yv - tablica[i][j].yu*tablica[i][j].xv;
 
+
+			//odwracanie kierunków wektorów normalnych dla tylniej strony jajka
 			if (i > N / 2)
 			{
 				tablica[i][j].nx = -1.0*tablica[i][j].nx;
@@ -300,7 +282,7 @@ void Egg()
 				tablica[i][j].nz = -1.0*tablica[i][j].nz;
 			}
 
-
+			//specjalna modyfikacja wektora normalnego na œrodku jajka
 			if (i == N / 2) 
 			{
 				tablica[i][j].nx = 0.0;
@@ -308,45 +290,23 @@ void Egg()
 				tablica[i][j].nz = 0.0;
 			}
 
+			//specjalna modyfikacja wektora normalnego na górze i na dole jajka
 			if (i == 0 || i == N)
 			{
 				tablica[i][j].nx = 0.0;
 				tablica[i][j].ny = -1.0;
 				tablica[i][j].nz = 0.0;
 			}
-
-		
-
 			
-			//	cout << "Przed: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
+			//Normalizacja wektora normalnego --> ustawienie jego d³ugoœci na 1
 			float pierwiastek = sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-		
-				//	if ()
-				//	{
-				tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
-				tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
-				tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
-				//	cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-		//	}
-			
-			//cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz) << endl;
+	
+			tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
+			tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
+			tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
 		}
 
-	/*for(int i = 0; i <= N; i++)
-	{
-	for (int j = 0; j <= N; j++)
-	std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
-
-	std::cout << std::endl;
-	}
-
-	std::cin.get();
-	std::cin.get();
-	*/
-
-	DrawEggTriangle();
-
-
+	DrawEggTriangle();	//rysowanie jajka
 }
 
 void LightsMaking()
@@ -460,9 +420,6 @@ void RenderScene(void)
 	glLoadIdentity();
 	// Czyszczenie macierzy bie??cej
 
-
-
-	//gluLookAt(5.0, 2.0, 10.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0);
 	gluLookAt(0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	// Zdefiniowanie po³o¿enia obserwatora
 	Axes();
@@ -479,11 +436,11 @@ void RenderScene(void)
 		AnglesCountingLight2();
 	}
 
-	light1Placing();
-	light2Placing();
+	light1Placing();	//ustawienie wspó³rzêdnych 1 œwiat³a - czerwone
+	light2Placing();	//ustawienie wspó³rzêdnych 2 œwiat³a - niebieskie
 
 
-	LightsMaking();
+	LightsMaking();		//ustawienie œwiate³ przez program	
 
 	Egg();
 	// Narysowanie czajnika
@@ -519,19 +476,22 @@ void MyInit(void)
 
 	// Definicja Ÿród³a œwiat³a
 	//-------------------------------------------------------
-	GLfloat light_position[2][4] = { { -10.0, -10.0, -10.0, 1.0 },{ -10.0, -10.0, -10.0, 1.0 } };
-	// po³o¿enie Ÿród³a
+	GLfloat light_position0[] = { -10.0, -10.0, -10.0, 1.0 };
+	GLfloat light_position1[]{ -10.0, -10.0, -10.0, 1.0 };
+	// po³o¿enie Ÿróde³ œwiat³a
 
 	GLfloat light_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a otoczenia
+	// sk³adowe intensywnoœci œwiecenia Ÿróde³ œwiat³a otoczenia
 	// Ia = [Iar,Iag,Iab]
 
-	GLfloat light_diffuse[2][4] = { { 1.0, 0.0, 0.0, 0.0 },{ 0.0, 0.0, 1.0, 1.0 } };
-	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
+	GLfloat light_diffuse0[] = { 1.0, 0.0, 0.0, 0.0 };
+	GLfloat light_diffuse1[] = { 0.0, 0.0, 1.0, 1.0 };
+	// sk³adowe intensywnoœci œwiecenia Ÿróde³ œwiat³a powoduj¹cego
 	// odbicie dyfuzyjne Id = [Idr,Idg,Idb]
 
-	GLfloat light_specular[2][4] = { { 1.0, 1.0, 0.0, 1.0 },{ 0.7, 0.7, 1.0, 1.0 } };
-	// sk³adowe intensywnoœci œwiecenia Ÿród³a œwiat³a powoduj¹cego
+	GLfloat light_specular0[] = { 1.0, 1.0, 0.0, 1.0 };
+	GLfloat light_specular1[] = { 0.7, 0.7, 1.0, 1.0 };
+	// sk³adowe intensywnoœci œwiecenia Ÿróde³ œwiat³a powoduj¹cego
 	// odbicie kierunkowe Is = [Isr,Isg,Isb]
 
 	GLfloat att_constant = { 1.0 };
@@ -556,18 +516,18 @@ void MyInit(void)
 	// Ustawienie parametrów Ÿród³a œwiat³a
 	//-------------------------------------------------------
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse[0]);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular[0]);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position[0]);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse0);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular0);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
 
 	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, att_constant);
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, att_linear);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, att_quadratic);
 
 	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse[1]);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular[1]);
-	glLightfv(GL_LIGHT1, GL_POSITION, light_position[1]);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse1);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular1);
+	glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
 
 	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, att_constant);
 	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, att_linear);

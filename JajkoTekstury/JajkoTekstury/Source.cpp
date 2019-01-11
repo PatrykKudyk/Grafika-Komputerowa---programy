@@ -37,7 +37,7 @@ struct Point
 	float nz;
 };
 
-static int N = 60;			//wielkosc tablicy
+static int N = 200;			//wielkosc tablicy
 
 Point **tablica;		//dynamiczna tablica struktur punktowych
 
@@ -86,9 +86,7 @@ GLbyte *LoadTGAImage(const char *FileName, GLint *ImWidth, GLint *ImHeight, GLin
 {
 
 	/*************************************************************************************/
-
 	// Struktura dla nag³ówka pliku  TGA
-
 
 #pragma pack(1)            
 	typedef struct
@@ -114,7 +112,6 @@ GLbyte *LoadTGAImage(const char *FileName, GLint *ImWidth, GLint *ImHeight, GLin
 	short sDepth;
 	GLbyte    *pbitsperpixel = NULL;
 
-
 	/*************************************************************************************/
 
 	// Wartoœci domyœlne zwracane w przypadku b³êdu 
@@ -131,9 +128,7 @@ GLbyte *LoadTGAImage(const char *FileName, GLint *ImWidth, GLint *ImHeight, GLin
 	/*************************************************************************************/
 	// Przeczytanie nag³ówka pliku 
 
-
 	fread(&tgaHeader, sizeof(TGAHEADER), 1, pFile);
-
 
 	/*************************************************************************************/
 
@@ -151,17 +146,12 @@ GLbyte *LoadTGAImage(const char *FileName, GLint *ImWidth, GLint *ImHeight, GLin
 		return NULL;
 
 	/*************************************************************************************/
-
 	// Obliczenie rozmiaru bufora w pamiêci
-
 
 	lImageSize = tgaHeader.width * tgaHeader.height * sDepth;
 
-
 	/*************************************************************************************/
-
 	// Alokacja pamiêci dla danych obrazu
-
 
 	pbitsperpixel = (GLbyte*)malloc(lImageSize * sizeof(GLbyte));
 
@@ -174,11 +164,8 @@ GLbyte *LoadTGAImage(const char *FileName, GLint *ImWidth, GLint *ImHeight, GLin
 		return NULL;
 	}
 
-
 	/*************************************************************************************/
-
 	// Ustawienie formatu OpenGL
-
 
 	switch (sDepth)
 
@@ -210,14 +197,9 @@ GLbyte *LoadTGAImage(const char *FileName, GLint *ImWidth, GLint *ImHeight, GLin
 
 	};
 
-
-
 	fclose(pFile);
 
-
-
 	return pbitsperpixel;
-
 }
 
 
@@ -269,15 +251,6 @@ void Motion(GLsizei x, GLsizei y)
 
 // Funkcja rysuj¹ca osie uk³adu wspó?rz?dnych
 
-/*void spinTeapot()
-{
-theta1[0] += 0.15;
-theta1[1] -= 0.25;
-theta1[2] += 0.05;
-glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
-}
-*/
-
 void DrawEggTriangle()
 {
 	for (int i = 0; i <= N; i++)
@@ -288,34 +261,28 @@ void DrawEggTriangle()
 				if (j <= (N - 1))
 				{
 					glBegin(GL_TRIANGLES);
-					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 					glTexCoord2f((float)((float)i/(float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
 					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i + 1][j + 1].x, tablica[i + 1][j + 1].y - 5.0f, tablica[i + 1][j + 1].z);
-					//glColor3f(kolory[i][j + 1].x, kolory[i][j + 1].y, kolory[i][j + 1].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i][j + 1].nx, tablica[i][j + 1].ny, tablica[i][j + 1].nz);
 					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i][j + 1].x, tablica[i][j + 1].y - 5.0f, tablica[i][j + 1].z);
 					glEnd();
 					glBegin(GL_TRIANGLES);
-					//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-					//glColor3f(kolory[i + 1][j].x, kolory[i + 1][j].y, kolory[i + 1][j].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i + 1][j].nx, tablica[i + 1][j].ny, tablica[i + 1][j].nz);
 					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 					glVertex3f(tablica[i + 1][j].x, tablica[i + 1][j].y - 5.0f, tablica[i + 1][j].z);
-					//glColor3f(kolory[i + 1][j + 1].x, kolory[i + 1][j + 1].y, kolory[i + 1][j + 1].z);
 					glColor3f(1.0, 1.0, 1.0);
 					glNormal3f(tablica[i + 1][j + 1].nx, tablica[i + 1][j + 1].ny, tablica[i + 1][j + 1].nz);
 					glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
@@ -326,17 +293,14 @@ void DrawEggTriangle()
 			else
 			{
 				glBegin(GL_TRIANGLES);
-				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 				glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
 				glTexCoord2f(0.0f, 0.0f);
 				glVertex3f(tablica[0][0].x, tablica[0][0].y - 5.0f, tablica[0][0].z);
-				//glColor3f(kolory[i][0].x, kolory[i][0].y, kolory[i][0].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[i][0].nx, tablica[i][0].ny, tablica[i][0].nz);
 				glTexCoord2f((float)((float)i / (float)N), 0.0f);
@@ -344,17 +308,14 @@ void DrawEggTriangle()
 				glEnd();
 
 				glBegin(GL_TRIANGLES);
-				//glColor3f(kolory[i][j].x, kolory[i][j].y, kolory[i][j].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[i][j].nx, tablica[i][j].ny, tablica[i][j].nz);
 				glTexCoord2f((float)((float)i / (float)N), (float)((float)j / (float)N));
 				glVertex3f(tablica[i][j].x, tablica[i][j].y - 5.0f, tablica[i][j].z);
-				//glColor3f(kolory[0][j].x, kolory[0][j].y, kolory[0][j].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[0][j].nx, tablica[0][j].ny, tablica[0][j].nz);
 				glTexCoord2f(0.0f, (float)((float)j / (float)N));
 				glVertex3f(tablica[0][j].x, tablica[0][j].y - 5.0f, tablica[0][j].z);
-				//glColor3f(kolory[0][0].x, kolory[0][0].y, kolory[0][0].z);
 				glColor3f(1.0, 1.0, 1.0);
 				glNormal3f(tablica[0][0].nx, tablica[0][0].ny, tablica[0][0].nz);
 				glTexCoord2f(0.0f, 0.0f);
@@ -460,38 +421,14 @@ void Egg()
 				tablica[i][j].nz = 0.0;
 			}
 
-
-
-
-			//	cout << "Przed: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
 			float pierwiastek = sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
 
-			//	if ()
-			//	{
 			tablica[i][j].nx = tablica[i][j].nx / pierwiastek;
 			tablica[i][j].ny = tablica[i][j].ny / pierwiastek;
 			tablica[i][j].nz = tablica[i][j].nz / pierwiastek;
-			//	cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz);
-			//	}
-
-			//cout << "  po: " << sqrtf(tablica[i][j].nx*tablica[i][j].nx + tablica[i][j].ny*tablica[i][j].ny + tablica[i][j].nz*tablica[i][j].nz) << endl;
 		}
 
-	/*for(int i = 0; i <= N; i++)
-	{
-	for (int j = 0; j <= N; j++)
-	std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
-
-	std::cout << std::endl;
-	}
-
-	std::cin.get();
-	std::cin.get();
-	*/
-
 	DrawEggTriangle();
-
-
 }
 
 void Axes(void)
@@ -544,76 +481,13 @@ void viewerPlacing()
 
 void AnglesCounting()
 {
-	/*GLfloat temp1 = cosTheta, temp2 = sinTheta, temp3 = cosPhi, temp4 = sinPhi;
-	cosTheta = viewer[0] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]);
-	if (cosTheta < -1 || cosTheta > 1)
-	cosTheta = temp1;
-	sinTheta = viewer[2] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]);
-	if (sinTheta < -1 || cosTheta > 1)
-	sinTheta = temp1;
-	//cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) /	(GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1]*viewer[1]);
-	cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) / promien;
-	if (cosPhi < -1 || cosTheta > 1)
-	cosPhi = temp1;
-	//	sinPhi = viewer[1] / (GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1] * viewer[1]);
-	sinPhi = viewer[1] /promien;
-
-	if (sinPhi < -1 || cosTheta > 1)
-	sinPhi = temp1;*/
-
-	/*
-	GLfloat temp1 = PHI, temp2 = THETA;
-	if (PHI >= 0 && PHI <= M_PI)
-	PHI += delta_y*pix2angleY / 40.0;
-	if (PHI < 0 || PHI > 2 * M_PI)
-	PHI = temp1;
-	if (THETA >= 0 && THETA <= M_PI)
-	THETA += delta_x*pix2angleX / 40.0;
-	if (THETA < 0 || THETA > 2 * M_PI)
-	THETA = temp2;
-	*/
-
-	//GLfloat temp1 = PHI, temp2 = THETA;
-	//if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
-	//{
-	//PHI += delta_y*pix2angleY / 20.0;
-	//THETA += delta_x*pix2angleX / 20.0;
-	//}
-	//viewerPlacing();
-	//if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
-	//{
-	//	PHI = temp1;
-	//	THETA = temp2;
-	//}
-
-	/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
-	if (kierunek == true)
-	kierunek = false;
-	else
-	kierunek = true;
-
-	if(kierunek)
-	{
-	PHI += delta_y*pix2angleY / 40.0;
-	THETA += delta_x*pix2angleX / 40.0;
-	}
-	else
-	{
-	PHI = PHI * (-1.0);
-	THETA = THETA * (-1.0);
-	}
-	*/
-
-	PHI += delta_y*pix2angleY;// / 40.0;
-							  //	PHI = fmod(PHI, M_PI);
-	THETA += delta_x*pix2angleX;// / 40.0;
-								//	THETA = fmod(THETA, M_PI);
+	PHI += delta_y*pix2angleY;
+	THETA += delta_x*pix2angleX;
 
 	if (cosf(PHI) >= 0.0f)
 		y = 1.0f;
 	else
 		y = -1.0f;
-
 }
 
 void RenderScene(void)
@@ -633,25 +507,6 @@ void RenderScene(void)
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
 
-
-	/*
-	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
-	{
-	theta[0] += delta_x*pix2angleX;
-	theta[1] += delta_y*pix2angleY;
-
-	}                                  // do ró¿nicy po³o¿eñ kursora myszy
-
-	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
-	{
-	GLfloat temp = viewer[2];
-	if (viewer[2] >= 7.0 && viewer[2] <= 30.0)
-	viewer[2] += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
-	if (viewer[2] < 7.0 || viewer[2] > 30.0)
-	viewer[2] = temp;
-	}
-	*/
-
 	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
 	{
 		AnglesCounting();
@@ -668,23 +523,6 @@ void RenderScene(void)
 
 	viewerPlacing();
 
-	//glRotatef(theta[0], 0.0, 1.0, 0.0);  //obrót obiektu o nowy k¹t
-	//glRotatef(theta[1], 1.0, 0.0, 0.0);  //obrót obiektu o nowy k¹t
-
-	/*
-	glRotatef(theta1[0], 1.0, 0.0, 0.0);
-	glRotatef(theta1[1], 0.0, 1.0, 0.0);
-	glRotatef(theta1[2], 0.0, 0.0, 1.0);
-	*/
-
-	//glColor3f(1.0f, 1.0f, 1.0f);
-	// Ustawienie koloru rysowania na bia³y
-
-	//glutWireTeapot(3.0);
-
-
-	//glColor3f(1.0f, 1.0f, 1.0f);
-	//glutSolidTeapot(3.0f);
 	Egg();
 	// Narysowanie czajnika
 	glFlush();
@@ -913,7 +751,7 @@ void main(void)
 
 	glutInitWindowSize(300, 300);
 
-	glutCreateWindow("Rzutowanie perspektywiczne - 2 Zadanie");
+	glutCreateWindow("Jajko 3D - Teksturowanie");
 
 	GeneratingColors();
 

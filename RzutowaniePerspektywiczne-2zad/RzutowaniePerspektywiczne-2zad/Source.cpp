@@ -31,9 +31,9 @@ Point **tablica;		//dynamiczna tablica struktur punktowych
 
 Point **kolory;			//dynamiczna tablica kolorów
 
-GLfloat promien = 20.0;
+GLfloat promien = 20.0;	//pocz¹tkowy promieñ sfery
 
-float y = 1.0f;
+float y = 1.0f;		//zmienna pomocnicza przy obliczaniu cosPHI
 
 bool kierunek = true;  //true - dodawanie, false - odejmowanie
 
@@ -86,7 +86,7 @@ void Mouse(int btn, int state, int x, int y)
 
 	if (btn == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		statusP = 1;          // wciêniêty zosta³ lewy klawisz myszy
+		statusP = 1;          // wciêniêty zosta³ prawy klawisz myszy
 		y_pos_old = y;         // przypisanie aktualnie odczytanej pozycji kursora 
 	}
 	else
@@ -116,16 +116,6 @@ void Motion(GLsizei x, GLsizei y)
 /*************************************************************************************/
 
 
-// Funkcja rysuj¹ca osie uk³adu wspó?rz?dnych
-
-/*void spinTeapot()
-{
-theta1[0] += 0.15;
-theta1[1] -= 0.25;
-theta1[2] += 0.05;
-glutPostRedisplay(); //odœwie¿enie zawartoœci aktualnego okna
-}
-*/
 
 void DrawEggTriangle()
 {
@@ -186,12 +176,9 @@ void GeneratingColors()
 	for (int i = 0; i <= N; i++)
 		for (int j = 0; j <= N; j++)
 		{
-
-			//	else {
 			kolory[i][j].x = (float)(rand() % 1000 / 1000.0);
 			kolory[i][j].y = (float)(rand() % 1000 / 1000.0);
 			kolory[i][j].z = (float)(rand() % 1000 / 1000.0);
-			//	}
 		}
 
 	for (int i = 0; i <= N; i++)
@@ -205,23 +192,6 @@ void GeneratingColors()
 			}
 		}
 
-
-
-	/*
-	for (int i = 0; i <= N; i++)
-	{
-	for(int j = 0 ; j <= N; j++)
-	std::cout << "X = " << kolory[i][j].x << "\t";
-	std::cout << std::endl;
-	for (int j = 0; j <= N; j++)
-	std::cout << "Y = " << kolory[i][j].y << "\t";
-	std::cout << std::endl;
-	for (int j = 0; j <= N; j++)
-	std::cout << "Z = " << kolory[i][j].z << "\t";
-	std::cout << std::endl << std::endl;
-	}
-	std::cin.get();
-	std::cin.get();*/
 	tablica = new Point*[N + 1];
 	for (int i = 0; i <= N; i++)
 		tablica[i] = new Point[N + 1];
@@ -240,21 +210,7 @@ void Egg()
 			tablica[i][j].z = ((-90 * pow(u, 5) + 225 * pow(u, 4) - 270 * pow(u, 3) + 180 * u*u - 45 * u)*sin((float)M_PI*v));
 		}
 
-	/*for(int i = 0; i <= N; i++)
-	{
-	for (int j = 0; j <= N; j++)
-	std::cout << tablica[i][j].x << ", " << tablica[i][j].y << ", " << tablica[i][j].z << "\t";
-
-	std::cout << std::endl;
-	}
-
-	std::cin.get();
-	std::cin.get();
-	*/
-
 	DrawEggTriangle();
-
-
 }
 
 
@@ -301,161 +257,58 @@ void Axes(void)
 
 void viewerPlacing()
 {
-	viewer[0] = promien*cos(THETA)*cos(PHI);
-	viewer[1] = promien*sin(PHI);
-	viewer[2] = promien*sin(THETA)*cos(PHI);
+	viewer[0] = promien*cos(THETA)*cos(PHI);	//ustawienie wartoœci dla wspó³rzêdnej X obserwatora
+	viewer[1] = promien*sin(PHI);				//ustawienie wartoœci dla wspó³rzêdnej Y obserwatora
+	viewer[2] = promien*sin(THETA)*cos(PHI);	//ustawienie wartoœci dla wspó³rzêdnej X obserwatora
 }
 
 void AnglesCounting()
 {
-	/*GLfloat temp1 = cosTheta, temp2 = sinTheta, temp3 = cosPhi, temp4 = sinPhi;
-	cosTheta = viewer[0] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]);
-	if (cosTheta < -1 || cosTheta > 1)
-		cosTheta = temp1;
-	sinTheta = viewer[2] / (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]);
-	if (sinTheta < -1 || cosTheta > 1)
-		sinTheta = temp1;
-	//cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) /	(GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1]*viewer[1]);
-	cosPhi = (GLfloat)sqrt(viewer[0] * viewer[0] + viewer[2] * viewer[2]) / promien;
-	if (cosPhi < -1 || cosTheta > 1)
-		cosPhi = temp1;
-//	sinPhi = viewer[1] / (GLfloat)sqrt((GLfloat)sqrt(viewer[0] * viewer[0] + viewer[1] * viewer[1]) + viewer[1] * viewer[1]);
-	sinPhi = viewer[1] /promien;
+	PHI += delta_y*pix2angleY;		//obliczenie nowej wartoœci PHI
+	THETA += delta_x*pix2angleX;	//obliczenie nowej wartoœci THETA
 
-	if (sinPhi < -1 || cosTheta > 1)
-		sinPhi = temp1;*/
-
-/*
-	GLfloat temp1 = PHI, temp2 = THETA;
-	if (PHI >= 0 && PHI <= M_PI)
-	PHI += delta_y*pix2angleY / 40.0;
-	if (PHI < 0 || PHI > 2 * M_PI)
-		PHI = temp1;
-	if (THETA >= 0 && THETA <= M_PI)
-	THETA += delta_x*pix2angleX / 40.0;
-	if (THETA < 0 || THETA > 2 * M_PI)
-		THETA = temp2;
-	*/
-
-	//GLfloat temp1 = PHI, temp2 = THETA;
-	//if(!(viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5))
-	//{
-			//PHI += delta_y*pix2angleY / 20.0;
-			//THETA += delta_x*pix2angleX / 20.0;
-	//}
-	//viewerPlacing();
-	//if (viewer[0] <= 0.5 && viewer[0] >= -0.5 && viewer[2] <= 0.5 && viewer[2] >= -0.5)
-	//{
-	//	PHI = temp1;
-	//	THETA = temp2;
-	//}
-
-	/*if (viewer[0] == 0.0 && viewer[2] == 0.0)
-		if (kierunek == true)
-			kierunek = false;
-		else
-			kierunek = true;
-	
-	if(kierunek)
-	{
-		PHI += delta_y*pix2angleY / 40.0;
-		THETA += delta_x*pix2angleX / 40.0;
-	}
-	else
-	{
-		PHI = PHI * (-1.0);
-		THETA = THETA * (-1.0);
-	}
-	*/
-	
-	PHI += delta_y*pix2angleY;// / 40.0;
-//	PHI = fmod(PHI, M_PI);
-	THETA += delta_x*pix2angleX;// / 40.0;
-//	THETA = fmod(THETA, M_PI);
-
-	if (cosf(PHI) >= 0.0f)
-		y = 1.0f;
-	else
+	if (cosf(PHI) >= 0.0f)		//warunek sprawdzaj¹cy czy cosPHI nie przeszed³ przez oœ OX
+		y = 1.0f;				//jeœli tak, to odpowiednia konfiguracja zmiennej y u¿ywanej
+	else						//przy ustawianiu obserwatora w funkcji RenderScene()
 		y = -1.0f;
-
 }
 
 
 
 void RenderScene(void)
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
 
 	glLoadIdentity();
 	// Czyszczenie macierzy bie??cej
 
-
-
-	//gluLookAt(5.0, 2.0, 10.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0);
 	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, y, 0.0);
 	// Zdefiniowanie po³o¿enia obserwatora
+
 	Axes();
 	// Narysowanie osi przy pomocy funkcji zdefiniowanej powy¿ej
 
-
-/*
-	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
+	if (statusL == 1)           //jeœli lewy klawisz myszy wciêniêty
 	{
-		theta[0] += delta_x*pix2angleX;
-		theta[1] += delta_y*pix2angleY;
+		AnglesCounting();		//obliczenie k¹tów
+	}                                
 
-	}                                  // do ró¿nicy po³o¿eñ kursora myszy
-
-	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
-	{
-		GLfloat temp = viewer[2];
-		if (viewer[2] >= 7.0 && viewer[2] <= 30.0)
-			viewer[2] += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
-		if (viewer[2] < 7.0 || viewer[2] > 30.0)
-			viewer[2] = temp;
-	}
-	*/
-
-	if (statusL == 1)                     // jeœli lewy klawisz myszy wciêniêty
-	{
-		AnglesCounting();
-	}                                  // do ró¿nicy po³o¿eñ kursora myszy
-
-	if (statusP == 1)                     // jeœli prawy klawisz myszy wciêniêty
+	if (statusP == 1)           // jeœli prawy klawisz myszy wciêniêty
 	{
 		GLfloat temp = promien;
-		if (promien >= 7.0 && promien <= 30.0)
+		if (promien >= 7.0 && promien <= 30.0)	//warunki uniemo¿liwiaj¹ce wejœcie do jajka
 			promien += delta_y*pix2angleY;    // modyfikacja k¹ta obrotu o kat proporcjonalny
 		if (promien < 7.0 || promien > 30.0)
 			promien = temp;
 	}
 
-	viewerPlacing();
+	viewerPlacing();	//funkcja ustawiaj¹ca obserwatora w odpowiednim miejscu
+	Egg();			//narysowanie jajka
 
-	//glRotatef(theta[0], 0.0, 1.0, 0.0);  //obrót obiektu o nowy k¹t
-	//glRotatef(theta[1], 1.0, 0.0, 0.0);  //obrót obiektu o nowy k¹t
-
-	/*
-	glRotatef(theta1[0], 1.0, 0.0, 0.0);
-	glRotatef(theta1[1], 0.0, 1.0, 0.0);
-	glRotatef(theta1[2], 0.0, 0.0, 1.0);
-	*/
-
-	//glColor3f(1.0f, 1.0f, 1.0f);
-	// Ustawienie koloru rysowania na bia³y
-
-	//glutWireTeapot(3.0);
-
-	Egg();
-
-	// Narysowanie czajnika
 	glFlush();
 	// Przekazanie poleceñ rysuj¹cych do wykonania
 	glutSwapBuffers();
-
-
 
 }
 /*************************************************************************************/
@@ -485,8 +338,8 @@ void MyInit(void)
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
 {
 
-	pix2angleX = 2 * M_PI / (float)horizontal;  // przeliczenie pikseli na stopnie
-	pix2angleY = 2 * M_PI / (float)vertical;  // przeliczenie pikseli na stopnie
+	pix2angleX = 2 * M_PI / (float)horizontal;	// przeliczenie pikseli na stopnie - M_PI to sta³a która w przybli¿eniu równa jest wartoœci PI
+	pix2angleY = 2 * M_PI / (float)vertical;	// przeliczenie pikseli na stopnie - M_PI to sta³a która w przybli¿eniu równa jest wartoœci PI
 
 	glMatrixMode(GL_PROJECTION);
 	// Prze³¹czenie macierzy bie¿¹cej na macierz projekcji
@@ -527,7 +380,7 @@ void main(void)
 
 	glutInitWindowSize(300, 300);
 
-	glutCreateWindow("Rzutowanie perspektywiczne - 2 Zadanie");
+	glutCreateWindow("Rzutowanie perspektywiczne - JAJKO 3D");
 
 	GeneratingColors();
 
